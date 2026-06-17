@@ -410,7 +410,7 @@ window.translations = {
         "setting_master_audio": "دەنگی گشتی",
         "setting_sound_effects": "دەنگە لاوەکیەکان",
         "setting_music": "مۆسیقا",
-        "setting_music_volume": "بەرزی دەنگی مۆسیقا",
+        "setting_music_volume": "بەرزی دەنگ لە کۆمپیتەر",
         "setting_notifications": "ئاگادارکردنەوەکان",
         "setting_language": "زمان",
 
