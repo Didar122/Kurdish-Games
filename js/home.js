@@ -534,6 +534,7 @@ class BackgroundMusicManager {
         this.audio = null;
         this.currentSongId = null;
         this.isPlaying = false;
+        this.pendingPlayListener = null;
         
         // Read volume and status
         this.volume = localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 0.5;
@@ -545,11 +546,38 @@ class BackgroundMusicManager {
         return masterMuted || musicMuted;
     }
 
+    _setupUserInteractionPlay(songId) {
+        const playOnInteract = () => {
+            if (this.currentSongId === songId && this.audio && !this.getIsMuted()) {
+                this.audio.play().catch(e => console.warn(e));
+                this.isPlaying = true;
+            }
+            document.removeEventListener('click', playOnInteract);
+            document.removeEventListener('keydown', playOnInteract);
+            document.removeEventListener('touchend', playOnInteract);
+            document.removeEventListener('pointerdown', playOnInteract);
+        };
+        document.addEventListener('click', playOnInteract);
+        document.addEventListener('keydown', playOnInteract);
+        document.addEventListener('touchend', playOnInteract, { passive: true });
+        document.addEventListener('pointerdown', playOnInteract);
+        this.pendingPlayListener = playOnInteract;
+    }
+
+    _cleanupUserInteractionPlay() {
+        if (this.pendingPlayListener) {
+            document.removeEventListener('click', this.pendingPlayListener);
+            document.removeEventListener('keydown', this.pendingPlayListener);
+            document.removeEventListener('touchend', this.pendingPlayListener);
+            document.removeEventListener('pointerdown', this.pendingPlayListener);
+            this.pendingPlayListener = null;
+        }
+    }
+
     playSong(songId, audioUrl) {
         if (!audioUrl) return;
 
         if (this.currentSongId === songId && this.audio) {
-            // Already loaded this song
             const isMuted = this.getIsMuted();
             if (!isMuted) {
                 if (this.audio.paused) {
@@ -563,29 +591,18 @@ class BackgroundMusicManager {
             return;
         }
 
-        // Stop existing
         this.stop();
 
         this.currentSongId = songId;
         this.audio = new Audio(audioUrl);
-        this.audio.loop = (songId !== 'global_song_kurdsat'); // loop audio files, but not live stream
+        this.audio.loop = (songId !== 'global_song_kurdsat');
         this.audio.volume = this.volume;
 
         const isMuted = this.getIsMuted();
         if (!isMuted) {
             this.audio.play().catch(e => {
                 console.warn("Audio play blocked, waiting for user interaction:", e);
-                // Attempt play on first user interaction
-                const playOnInteract = () => {
-                    if (this.currentSongId === songId && this.audio && !this.getIsMuted()) {
-                        this.audio.play().catch(e => console.warn(e));
-                        this.isPlaying = true;
-                    }
-                    document.removeEventListener('click', playOnInteract);
-                    document.removeEventListener('keydown', playOnInteract);
-                };
-                document.addEventListener('click', playOnInteract);
-                document.addEventListener('keydown', playOnInteract);
+                this._setupUserInteractionPlay(songId);
             });
             this.isPlaying = true;
         } else {
@@ -616,11 +633,10 @@ class BackgroundMusicManager {
                 }
             }
             this.isPlaying = false;
+            this._cleanupUserInteractionPlay();
         } else {
-            // Unmuted: play
             if (this.audio) {
                 if (this.currentSongId === 'global_song_kurdsat') {
-                    // Re-fetch URL
                     if (typeof storeItems !== 'undefined' && storeItems.global) {
                         const song = storeItems.global.find(i => i.id === this.currentSongId);
                         if (song) {
@@ -630,7 +646,12 @@ class BackgroundMusicManager {
                     }
                 }
                 this.audio.volume = this.volume;
-                this.audio.play().catch(e => console.warn(e));
+                if (this.audio.paused) {
+                    this.audio.play().catch(e => {
+                        console.warn("Audio play blocked when unmuting:", e);
+                        this._setupUserInteractionPlay(this.currentSongId);
+                    });
+                }
                 this.isPlaying = true;
             } else {
                 this.playSelectedSong();
@@ -643,6 +664,12 @@ class BackgroundMusicManager {
         localStorage.setItem('musicVolume', vol.toString());
         if (this.audio) {
             this.audio.volume = vol;
+            if (!this.getIsMuted() && this.audio.paused) {
+                this.audio.play().catch(e => {
+                    console.warn("Audio play blocked on volume change:", e);
+                    this._setupUserInteractionPlay(this.currentSongId);
+                });
+            }
         }
     }
 
@@ -798,7 +825,11 @@ function initializeSettingsControls() {
                 localStorage.setItem('musicEnabled', enabled.toString());
             }
             if (window.backgroundMusicManager) {
-                window.backgroundMusicManager.updateMuteState();
+                if (enabled) {
+                    window.backgroundMusicManager.playSelectedSong();
+                } else {
+                    window.backgroundMusicManager.updateMuteState();
+                }
             }
         });
     }
@@ -808,6 +839,9 @@ function initializeSettingsControls() {
             const val = parseFloat(this.value);
             if (window.backgroundMusicManager) {
                 window.backgroundMusicManager.setVolume(val);
+                if (!window.backgroundMusicManager.getIsMuted()) {
+                    window.backgroundMusicManager.updateMuteState();
+                }
             }
             const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
             if (user && user.username && window.playerDataManager) {
