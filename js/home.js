@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeButtons();
     initializeFooterNav();
     setupLanguageSupport();
+    initPwaSupport();
     initializeCarousel();
     loadSelectedBackgroundHome();
     initializeSettingsControls();
@@ -396,14 +397,68 @@ function initializeFooterNav() {
     });
 }
 
+let deferredInstallPrompt = null;
+
 function setupLanguageSupport() {
-    const preferredLang = localStorage.getItem('preferredLanguage') || 'en';
+    const preferredLang = localStorage.getItem('preferredLanguage') || 'ku';
     if (typeof window.translatePage === 'function') {
         window.translatePage(preferredLang);
     }
 }
 
+function initPwaSupport() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(err => {
+            console.warn('Service worker registration failed:', err);
+        });
+    }
+
+    const installBtn = document.getElementById('installAppBtn');
+    if (!installBtn) return;
+    installBtn.style.display = 'none';
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        installBtn.style.display = 'inline-flex';
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        if (installBtn) {
+            installBtn.style.display = 'none';
+        }
+    });
+}
+
+window.promptInstallApp = async function() {
+    if (!deferredInstallPrompt) return;
+    const installBtn = document.getElementById('installAppBtn');
+    try {
+        deferredInstallPrompt.prompt();
+        const choiceResult = await deferredInstallPrompt.userChoice;
+        if (choiceResult.outcome === 'accepted') {
+            if (installBtn) installBtn.style.display = 'none';
+        }
+    } catch (err) {
+        console.warn('PWA install prompt failed:', err);
+    } finally {
+        deferredInstallPrompt = null;
+    }
+};
+
 function changeLanguage(lang) {
+    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (user && user.username && window.playerDataManager) {
+        try {
+            window.playerDataManager.update(d => {
+                d.settings = d.settings || {};
+                d.settings.preferredLanguage = lang;
+            });
+        } catch (e) {
+            console.warn('Failed to save preferred language to player data:', e);
+        }
+    }
     localStorage.setItem('preferredLanguage', lang);
     if (typeof window.translatePage === 'function') {
         window.translatePage(lang);
@@ -619,6 +674,44 @@ class BackgroundMusicManager {
     }
 }
 
+function getCurrentUserSettings() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if (currentUser && currentUser.username && window.playerDataManager && typeof window.playerDataManager.get === 'function') {
+        const pd = window.playerDataManager.get() || {};
+        return pd.settings || null;
+    }
+    return null;
+}
+
+function syncSettingsUI() {
+    const settings = getCurrentUserSettings();
+    if (!settings) return;
+
+    if (settings.preferredLanguage) {
+        localStorage.setItem('preferredLanguage', settings.preferredLanguage);
+        if (typeof window.translatePage === 'function') {
+            window.translatePage(settings.preferredLanguage);
+        }
+    }
+
+    const masterAudioToggle = document.getElementById('settingMasterAudio');
+    const soundEffectsToggle = document.getElementById('settingSoundEffects');
+    const musicToggle = document.getElementById('settingMusic');
+    const volumeSlider = document.getElementById('settingVolume');
+    const notificationsToggle = document.getElementById('settingNotifications');
+
+    if (masterAudioToggle && settings.masterAudioEnabled !== undefined) masterAudioToggle.checked = settings.masterAudioEnabled;
+    if (soundEffectsToggle && settings.soundEffectsEnabled !== undefined) soundEffectsToggle.checked = settings.soundEffectsEnabled;
+    if (musicToggle && settings.musicEnabled !== undefined) musicToggle.checked = settings.musicEnabled;
+    if (volumeSlider && settings.musicVolume !== undefined) volumeSlider.value = parseFloat(settings.musicVolume);
+    if (notificationsToggle && settings.notificationsEnabled !== undefined) notificationsToggle.checked = settings.notificationsEnabled;
+
+    const notifBtn = document.getElementById('notificationBtn');
+    if (notifBtn) {
+        notifBtn.style.display = settings.notificationsEnabled === false ? 'none' : 'flex';
+    }
+}
+
 function initializeSettingsControls() {
     const masterAudioToggle = document.getElementById('settingMasterAudio');
     const soundEffectsToggle = document.getElementById('settingSoundEffects');
@@ -626,12 +719,21 @@ function initializeSettingsControls() {
     const volumeSlider = document.getElementById('settingVolume');
     const notificationsToggle = document.getElementById('settingNotifications');
 
-    // Load initial states from LocalStorage or default
-    const masterAudioEnabled = localStorage.getItem('masterAudioEnabled') !== 'false';
-    const soundEffectsEnabled = localStorage.getItem('soundEffectsEnabled') !== 'false';
-    const musicEnabled = localStorage.getItem('musicEnabled') !== 'false';
-    const musicVolume = localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 0.5;
-    const notificationsEnabled = localStorage.getItem('notificationsEnabled') !== 'false';
+    // Load initial states from player data (if logged in) else LocalStorage or default
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    let playerSettings = null;
+    try {
+        if (currentUser && window.playerDataManager && typeof window.playerDataManager.get === 'function') {
+            const pd = window.playerDataManager.get() || {};
+            playerSettings = pd.settings || null;
+        }
+    } catch (e) { playerSettings = null }
+
+    const masterAudioEnabled = (playerSettings && playerSettings.masterAudioEnabled !== undefined) ? playerSettings.masterAudioEnabled : (localStorage.getItem('masterAudioEnabled') !== 'false');
+    const soundEffectsEnabled = (playerSettings && playerSettings.soundEffectsEnabled !== undefined) ? playerSettings.soundEffectsEnabled : (localStorage.getItem('soundEffectsEnabled') !== 'false');
+    const musicEnabled = (playerSettings && playerSettings.musicEnabled !== undefined) ? playerSettings.musicEnabled : (localStorage.getItem('musicEnabled') !== 'false');
+    const musicVolume = (playerSettings && playerSettings.musicVolume !== undefined) ? parseFloat(playerSettings.musicVolume) : (localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 0.5);
+    const notificationsEnabled = (playerSettings && playerSettings.notificationsEnabled !== undefined) ? playerSettings.notificationsEnabled : (localStorage.getItem('notificationsEnabled') !== 'false');
 
     // Set UI states
     if (masterAudioToggle) masterAudioToggle.checked = masterAudioEnabled;
@@ -654,7 +756,13 @@ function initializeSettingsControls() {
     if (masterAudioToggle) {
         masterAudioToggle.addEventListener('change', function() {
             const enabled = this.checked;
-            localStorage.setItem('masterAudioEnabled', enabled.toString());
+            // Save to player settings if logged in, otherwise localStorage
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (user && user.username && window.playerDataManager) {
+                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.masterAudioEnabled = enabled; }); } catch(e){}
+            } else {
+                localStorage.setItem('masterAudioEnabled', enabled.toString());
+            }
             if (window.backgroundMusicManager) {
                 window.backgroundMusicManager.updateMuteState();
             }
@@ -663,14 +771,24 @@ function initializeSettingsControls() {
 
     if (soundEffectsToggle) {
         soundEffectsToggle.addEventListener('change', function() {
-            localStorage.setItem('soundEffectsEnabled', this.checked.toString());
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (user && user.username && window.playerDataManager) {
+                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.soundEffectsEnabled = this.checked; }); } catch(e){}
+            } else {
+                localStorage.setItem('soundEffectsEnabled', this.checked.toString());
+            }
         });
     }
 
     if (musicToggle) {
         musicToggle.addEventListener('change', function() {
             const enabled = this.checked;
-            localStorage.setItem('musicEnabled', enabled.toString());
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (user && user.username && window.playerDataManager) {
+                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.musicEnabled = enabled; }); } catch(e){}
+            } else {
+                localStorage.setItem('musicEnabled', enabled.toString());
+            }
             if (window.backgroundMusicManager) {
                 window.backgroundMusicManager.updateMuteState();
             }
@@ -683,19 +801,48 @@ function initializeSettingsControls() {
             if (window.backgroundMusicManager) {
                 window.backgroundMusicManager.setVolume(val);
             }
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (user && user.username && window.playerDataManager) {
+                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.musicVolume = val; }); } catch(e){}
+            } else {
+                localStorage.setItem('musicVolume', val.toString());
+            }
         });
     }
 
     if (notificationsToggle) {
         notificationsToggle.addEventListener('change', function() {
             const enabled = this.checked;
-            localStorage.setItem('notificationsEnabled', enabled.toString());
+            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (user && user.username && window.playerDataManager) {
+                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.notificationsEnabled = enabled; }); } catch(e){}
+            } else {
+                localStorage.setItem('notificationsEnabled', enabled.toString());
+            }
             const notifBtn = document.getElementById('notificationBtn');
             if (notifBtn) {
                 notifBtn.style.display = enabled ? 'flex' : 'none';
             }
         });
     }
+
+    if (window.playerDataManager && typeof window.playerDataManager.subscribe === 'function') {
+        window.playerDataManager.subscribe(() => {
+            syncSettingsUI();
+        });
+    }
+
+    if (window.playerDataManager && typeof window.playerDataManager.loadForCurrentUser === 'function') {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        if (currentUser && currentUser.username) {
+            window.playerDataManager.loadForCurrentUser().then(() => {
+                syncSettingsUI();
+            }).catch(() => {});
+        }
+    }
+
+    syncSettingsUI();
+    window.syncSettingsUI = syncSettingsUI;
 
     // Play selected background music initially
     setTimeout(() => {

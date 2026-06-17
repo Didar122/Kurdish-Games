@@ -1,0 +1,21 @@
+{
+  "name": "Kurdish Games",
+  "short_name": "Kurdish",
+  "description": "A Kurdish games platform with traditional and multiplayer games.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "assets/images/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
