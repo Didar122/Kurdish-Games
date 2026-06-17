@@ -378,7 +378,8 @@
             <section class="about-container" style="padding: 20px; overflow-y: auto; flex: 1; color: white;">
                 <div
                     style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
-                    <img src="assets/images/icon.png" style="width: 80px; margin-bottom: 15px;" alt="Logo">
+                    <img id="aboutAppIcon" src="assets/images/icon.png" style="width: 140px; height:140px; object-fit:contain; margin-bottom: 12px; border-radius: 12px;" alt="Logo">
+                    <div id="aboutVersion" style="color:#ccc; font-weight:700; margin-bottom:8px;">v1.0.3</div>
                     <h2>Kurdish Games Hub</h2>
                     <p style="color: #ccc; margin-top: 10px;">A unified platform to play traditional and modern games.
                     </p>
@@ -425,9 +426,9 @@
                     <p id="aboutDevName" style="margin-top: 10px; color: #ccc;">Developed by Didar Baxtear</p>
                 </div>
 
-                <a href="#" target="_blank"
+                <a id="moreGamesLink" href="https://didar122.github.io/Didar-Library/index.html" target="_blank"
                     style="display: block; width: 100%; padding: 15px; background: #3b82f6; color: white; text-align: center; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-                    <i class="fas fa-gamepad" style="margin-right: 10px;"></i>More Games By Developer
+                    <i class="fas fa-gamepad" style="margin-right: 10px;"></i><span data-translate="about_more_games">More Games By Developer</span>
                 </a>
             </section>
         </div>

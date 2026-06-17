@@ -492,6 +492,14 @@ function changeLanguage(lang) {
 }
 window.changeLanguage = changeLanguage;
 
+// Populate About page version from manifest.json if available
+fetch('manifest.json').then(r => r.json()).then(man => {
+    if (man && man.version) {
+        const el = document.getElementById('aboutVersion');
+        if (el) el.textContent = 'v' + man.version;
+    }
+}).catch(() => {});
+
 function loadSelectedBackgroundHome() {
     // Try to load global background first (home page uses global backgrounds)
     const globalBgId = localStorage.getItem('selectedBackground_global');

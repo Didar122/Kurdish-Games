@@ -770,7 +770,7 @@ const selectorMappings = {
     "#aboutSection .accordion-content": "about_dama_desc",
     "#aboutSection .about-container h3": "about_dev_title",
     "#aboutDevName": "about_dev_name",
-    "#aboutSection .about-container a": "about_more_games",
+    "#aboutSection .about-container a span": "about_more_games",
 
     // Leaderboards Section
     "#leaderboardsSection .back-button": "games_back",
