@@ -606,28 +606,26 @@ async function loadAndShowAvailableRooms() {
     rooms.forEach(room => {
         const roomEl = document.createElement('div');
         roomEl.className = 'room-item';
-        
-        const roomLabel = window.getTranslation('mp_room_lbl', 'Room: ');
-        const typeLabel = window.getTranslation('mp_type_lbl', 'Type: ');
-        const createdLabel = window.getTranslation('mp_created_lbl', 'Created: ');
-        const gameTypeTranslated = room.gameType === 'standard' 
-            ? window.getTranslation('dama_type_standard_title', 'Standard') 
-            : window.getTranslation('dama_type_hukum_title', 'Dama-y Hukum');
-        const joinLabel = window.getTranslation('hub_action_join', 'Join');
-        
-        roomEl.innerHTML = `
-            <div class="room-info">
-                <h3>${roomLabel}${room.creatorUsername || 'Unknown'}</h3>
-                <p>${typeLabel}<span>${gameTypeTranslated}</span></p>
-                <p>${createdLabel}<span>${new Date(room.createdAt).toLocaleTimeString()}</span></p>
-            </div>
-            <button class="join-room-btn" onclick="joinRoomHandler('${room.roomId}', '${room.gameType}')">
-                <i class="fas fa-sign-in-alt"></i> ${joinLabel}
-            </button>
+
+        const roomInfo = document.createElement('div');
+        roomInfo.className = 'room-info';
+        roomInfo.innerHTML = `
+            <h3>${roomLabel}${room.creatorUsername || 'Unknown'}</h3>
+            <p>${typeLabel}<span>${gameTypeTranslated}</span></p>
+            <p>${createdLabel}<span>${new Date(room.createdAt).toLocaleTimeString()}</span></p>
         `;
+
+        const joinBtn = document.createElement('button');
+        joinBtn.type = 'button';
+        joinBtn.className = 'join-room-btn';
+        joinBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> ${joinLabel}`;
+        joinBtn.addEventListener('click', () => joinRoomHandler(room.roomId, room.gameType));
+
+        roomEl.appendChild(roomInfo);
+        roomEl.appendChild(joinBtn);
         roomsList.appendChild(roomEl);
     });
-    
+
     showScreen('roomListScreen');
 }
 

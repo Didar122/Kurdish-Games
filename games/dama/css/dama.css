@@ -1357,6 +1357,8 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #dama .join-room-btn:hover {
