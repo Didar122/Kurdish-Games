@@ -448,17 +448,6 @@ window.promptInstallApp = async function() {
 };
 
 function changeLanguage(lang) {
-    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    if (user && user.username && window.playerDataManager) {
-        try {
-            window.playerDataManager.update(d => {
-                d.settings = d.settings || {};
-                d.settings.preferredLanguage = lang;
-            });
-        } catch (e) {
-            console.warn('Failed to save preferred language to player data:', e);
-        }
-    }
     localStorage.setItem('preferredLanguage', lang);
     if (typeof window.translatePage === 'function') {
         window.translatePage(lang);
@@ -710,12 +699,14 @@ class BackgroundMusicManager {
 }
 
 function getCurrentUserSettings() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    if (currentUser && currentUser.username && window.playerDataManager && typeof window.playerDataManager.get === 'function') {
-        const pd = window.playerDataManager.get() || {};
-        return pd.settings || null;
-    }
-    return null;
+    return {
+        preferredLanguage: localStorage.getItem('preferredLanguage') || null,
+        masterAudioEnabled: localStorage.getItem('masterAudioEnabled') !== 'false',
+        soundEffectsEnabled: localStorage.getItem('soundEffectsEnabled') !== 'false',
+        musicEnabled: localStorage.getItem('musicEnabled') !== 'false',
+        musicVolume: localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : undefined,
+        notificationsEnabled: localStorage.getItem('notificationsEnabled') !== 'false'
+    };
 }
 
 function syncSettingsUI() {
@@ -754,21 +745,12 @@ function initializeSettingsControls() {
     const volumeSlider = document.getElementById('settingVolume');
     const notificationsToggle = document.getElementById('settingNotifications');
 
-    // Load initial states from player data (if logged in) else LocalStorage or default
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    let playerSettings = null;
-    try {
-        if (currentUser && window.playerDataManager && typeof window.playerDataManager.get === 'function') {
-            const pd = window.playerDataManager.get() || {};
-            playerSettings = pd.settings || null;
-        }
-    } catch (e) { playerSettings = null }
-
-    const masterAudioEnabled = (playerSettings && playerSettings.masterAudioEnabled !== undefined) ? playerSettings.masterAudioEnabled : (localStorage.getItem('masterAudioEnabled') !== 'false');
-    const soundEffectsEnabled = (playerSettings && playerSettings.soundEffectsEnabled !== undefined) ? playerSettings.soundEffectsEnabled : (localStorage.getItem('soundEffectsEnabled') !== 'false');
-    const musicEnabled = (playerSettings && playerSettings.musicEnabled !== undefined) ? playerSettings.musicEnabled : (localStorage.getItem('musicEnabled') !== 'false');
-    const musicVolume = (playerSettings && playerSettings.musicVolume !== undefined) ? parseFloat(playerSettings.musicVolume) : (localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 0.5);
-    const notificationsEnabled = (playerSettings && playerSettings.notificationsEnabled !== undefined) ? playerSettings.notificationsEnabled : (localStorage.getItem('notificationsEnabled') !== 'false');
+    // Load initial states from LocalStorage or default values
+    const masterAudioEnabled = localStorage.getItem('masterAudioEnabled') !== 'false';
+    const soundEffectsEnabled = localStorage.getItem('soundEffectsEnabled') !== 'false';
+    const musicEnabled = localStorage.getItem('musicEnabled') !== 'false';
+    const musicVolume = localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 0.5;
+    const notificationsEnabled = localStorage.getItem('notificationsEnabled') !== 'false';
 
     // Set UI states
     if (masterAudioToggle) masterAudioToggle.checked = masterAudioEnabled;
@@ -788,42 +770,31 @@ function initializeSettingsControls() {
     }
 
     // Bind event listeners
-    if (masterAudioToggle) {
-        masterAudioToggle.addEventListener('change', function() {
-            const enabled = this.checked;
-            // Save to player settings if logged in, otherwise localStorage
-            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-            if (user && user.username && window.playerDataManager) {
-                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.masterAudioEnabled = enabled; }); } catch(e){}
-            } else {
-                localStorage.setItem('masterAudioEnabled', enabled.toString());
-            }
+    const settingsSection = document.getElementById('settingsSection');
+
+    function saveSetting(key, value) {
+        localStorage.setItem(key, value.toString());
+    }
+
+    function handleSettingsChange(event) {
+        const target = event.target;
+        if (!target || !target.id) return;
+
+        if (target.id === 'settingMasterAudio') {
+            const enabled = target.checked;
+            saveSetting('masterAudioEnabled', enabled);
             if (window.backgroundMusicManager) {
                 window.backgroundMusicManager.updateMuteState();
             }
-        });
-    }
+        }
 
-    if (soundEffectsToggle) {
-        soundEffectsToggle.addEventListener('change', function() {
-            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-            if (user && user.username && window.playerDataManager) {
-                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.soundEffectsEnabled = this.checked; }); } catch(e){}
-            } else {
-                localStorage.setItem('soundEffectsEnabled', this.checked.toString());
-            }
-        });
-    }
+        if (target.id === 'settingSoundEffects') {
+            saveSetting('soundEffectsEnabled', target.checked);
+        }
 
-    if (musicToggle) {
-        musicToggle.addEventListener('change', function() {
-            const enabled = this.checked;
-            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-            if (user && user.username && window.playerDataManager) {
-                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.musicEnabled = enabled; }); } catch(e){}
-            } else {
-                localStorage.setItem('musicEnabled', enabled.toString());
-            }
+        if (target.id === 'settingMusic') {
+            const enabled = target.checked;
+            saveSetting('musicEnabled', enabled);
             if (window.backgroundMusicManager) {
                 if (enabled) {
                     window.backgroundMusicManager.playSelectedSong();
@@ -831,57 +802,63 @@ function initializeSettingsControls() {
                     window.backgroundMusicManager.updateMuteState();
                 }
             }
-        });
-    }
+        }
 
-    if (volumeSlider) {
-        volumeSlider.addEventListener('input', function() {
-            const val = parseFloat(this.value);
+        if (target.id === 'settingVolume' && target.type === 'range') {
+            const val = parseFloat(target.value);
+            saveSetting('musicVolume', val);
             if (window.backgroundMusicManager) {
                 window.backgroundMusicManager.setVolume(val);
                 if (!window.backgroundMusicManager.getIsMuted()) {
                     window.backgroundMusicManager.updateMuteState();
                 }
             }
-            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-            if (user && user.username && window.playerDataManager) {
-                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.musicVolume = val; }); } catch(e){}
-            } else {
-                localStorage.setItem('musicVolume', val.toString());
-            }
-        });
-    }
+        }
 
-    if (notificationsToggle) {
-        notificationsToggle.addEventListener('change', function() {
-            const enabled = this.checked;
-            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-            if (user && user.username && window.playerDataManager) {
-                try { window.playerDataManager.update(d => { d.settings = d.settings || {}; d.settings.notificationsEnabled = enabled; }); } catch(e){}
-            } else {
-                localStorage.setItem('notificationsEnabled', enabled.toString());
-            }
+        if (target.id === 'settingNotifications') {
+            const enabled = target.checked;
+            saveSetting('notificationsEnabled', enabled);
             const notifBtn = document.getElementById('notificationBtn');
             if (notifBtn) {
                 notifBtn.style.display = enabled ? 'flex' : 'none';
             }
-        });
-    }
-
-    if (window.playerDataManager && typeof window.playerDataManager.subscribe === 'function') {
-        window.playerDataManager.subscribe(() => {
-            syncSettingsUI();
-        });
-    }
-
-    if (window.playerDataManager && typeof window.playerDataManager.loadForCurrentUser === 'function') {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-        if (currentUser && currentUser.username) {
-            window.playerDataManager.loadForCurrentUser().then(() => {
-                syncSettingsUI();
-            }).catch(() => {});
         }
     }
+
+    function handleSwitchClick(event) {
+        const switchElement = event.target.closest('.switch');
+        if (!switchElement) return;
+
+        const input = switchElement.querySelector('input[type="checkbox"]');
+        if (!input) return;
+        if (event.target === input) return;
+
+        input.checked = !input.checked;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    if (settingsSection) {
+        settingsSection.addEventListener('change', handleSettingsChange);
+        settingsSection.addEventListener('click', handleSwitchClick);
+    }
+
+    if (masterAudioToggle) {
+        masterAudioToggle.addEventListener('change', handleSettingsChange);
+    }
+    if (soundEffectsToggle) {
+        soundEffectsToggle.addEventListener('change', handleSettingsChange);
+    }
+    if (musicToggle) {
+        musicToggle.addEventListener('change', handleSettingsChange);
+    }
+    if (volumeSlider) {
+        volumeSlider.addEventListener('input', handleSettingsChange);
+    }
+    if (notificationsToggle) {
+        notificationsToggle.addEventListener('change', handleSettingsChange);
+    }
+
+    // Settings are local only; no remote user sync is required.
 
     syncSettingsUI();
     window.syncSettingsUI = syncSettingsUI;

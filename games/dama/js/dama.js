@@ -954,6 +954,22 @@ function handleSquareClick(row, col) {
 
     // If clicking on own piece, select it
     if (piece && piece.color === gameState.currentPlayer) {
+        // If we're in a chain-capture sequence, only allow selecting the piece
+        // that performed the last capture (the one that must continue).
+        if (gameState.isChainCapture && gameState.lastMovedPiece) {
+            if (!(gameState.lastMovedPiece.row === row && gameState.lastMovedPiece.col === col)) {
+                // Wrong piece selected during chain capture - indicate invalid selection
+                gameState.lastInvalidMove = true;
+                const pieceElement = document.getElementById(`piece-${row}-${col}`);
+                if (pieceElement) {
+                    pieceElement.classList.add('shake');
+                    playSound('invalid');
+                    setTimeout(() => pieceElement.classList.remove('shake'), 500);
+                }
+                return; // Do not allow selecting other pieces while chaining
+            }
+        }
+
         gameState.selectedPiece = { row, col };
         let validMoves = getValidMoves(row, col);
         
@@ -1678,12 +1694,18 @@ async function endGame(winner) {
 
 function newGame() {
     document.getElementById('gameOverModal').classList.remove('active');
+
+    // Hide winner splash if visible (Play Again should close it)
+    const winnerSplash = document.getElementById('winnerSplashScreen');
+    if (winnerSplash) winnerSplash.classList.remove('active');
     
     // For two-player mode, use the specialized initialization with timer
     if (gameState.gameMode === 'two-player') {
         startTwoPlayerGame();
     } else {
         initializeGame();
+        // Ensure the game screen is visible for single-player
+        showScreen('gameScreen');
     }
 }
 
@@ -2356,18 +2378,40 @@ function evaluateMovesSimple(board, color, gameType) {
 
 function aiMakeMove() {
     let possibleMoves;
+
+    // Safety: reset chain capture counter when not in an active chain.
+    if (!gameState.isChainCapture) {
+        gameState.chainCaptureCounter = 0;
+    }
+
     if (gameState.isChainCapture && gameState.lastMovedPiece) {
-        const moves = getValidMoves(gameState.lastMovedPiece.row, gameState.lastMovedPiece.col);
-        possibleMoves = moves.map(move => ({
-            fromRow: gameState.lastMovedPiece.row,
-            fromCol: gameState.lastMovedPiece.col,
-            move
-        }));
+        // Only honor chain-capture if the last moved piece belongs to the AI.
+        const lp = gameState.lastMovedPiece;
+        const lpPiece = gameState.board[lp.row]?.[lp.col];
+        if (lpPiece && lpPiece.color === gameState.aiColor) {
+            const moves = getValidMoves(lp.row, lp.col);
+            possibleMoves = moves.map(move => ({
+                fromRow: lp.row,
+                fromCol: lp.col,
+                move
+            }));
+            if (possibleMoves.length === 0) {
+                // Chain capture state is stale or piece can no longer move; fall back to all AI moves.
+                gameState.isChainCapture = false;
+                gameState.lastMovedPiece = null;
+                possibleMoves = getAllPossibleMoves(gameState.aiColor);
+            }
+        } else {
+            // Last moved piece isn't AI's (stale state) — reset chain flags and get all moves.
+            gameState.isChainCapture = false;
+            gameState.lastMovedPiece = null;
+            possibleMoves = getAllPossibleMoves(gameState.aiColor);
+        }
     } else {
         possibleMoves = getAllPossibleMoves(gameState.aiColor);
     }
     
-    if (possibleMoves.length === 0) {
+    if (!possibleMoves || possibleMoves.length === 0) {
         gameState.isChainCapture = false;
         gameState.lastMovedPiece = null;
         switchPlayer();
@@ -2388,55 +2432,26 @@ function aiMakeMove() {
         // Easy: Random move
         moveToMake = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
         executeAIMove(moveToMake);
-    } else if (gameState.aiDifficulty === 'medium') {
-        // Medium: Prioritize safe captures, then strategic moves
+    } else if (gameState.aiDifficulty === 'medium' || gameState.aiDifficulty === 'hard') {
         const captureMoves = possibleMoves.filter(m => m.move.capture);
-        let safeMoves;
-        
-        if (captureMoves.length > 0) {
-            // Filter out trap moves
-            safeMoves = captureMoves.filter(m => !isCaptureTrap(m));
-            if (safeMoves.length === 0) {
-                // All captures are traps, pick the least bad one
-                safeMoves = captureMoves;
+        const finalMoves = captureMoves.length > 0 ? captureMoves : possibleMoves;
+        let bestMove = finalMoves[0];
+        let bestScore = -Infinity;
+
+        try {
+            for (const candidate of finalMoves) {
+                const score = simulateAndScoreMove(candidate);
+                if (typeof score === 'number' && score > bestScore) {
+                    bestScore = score;
+                    bestMove = candidate;
+                }
             }
-            // Pick best capture by basic heuristic
-            moveToMake = safeMoves.reduce((best, current) => {
-                const bestVal = (best.move.capture ? 30 : 0) + 
-                               (gameState.board[best.fromRow][best.fromCol].isKing ? 0 : (best.move.row === (gameState.aiColor === 'white' ? 7 : 0) ? 50 : 0));
-                const currentVal = (current.move.capture ? 30 : 0) + 
-                                  (gameState.board[current.fromRow][current.fromCol].isKing ? 0 : (current.move.row === (gameState.aiColor === 'white' ? 7 : 0) ? 50 : 0));
-                return currentVal > bestVal ? current : best;
-            });
-        } else {
-            // No captures, pick a strategic move
-            moveToMake = possibleMoves.reduce((best, current) => {
-                const bestScore = evaluateStrategicPosition(best);
-                const currentScore = evaluateStrategicPosition(current);
-                return currentScore > bestScore ? current : best;
-            });
+        } catch (error) {
+            console.error('[AI] medium/hard evaluation failed, falling back to default move', error);
+            bestMove = finalMoves[0];
         }
-        executeAIMove(moveToMake);
-    } else if (gameState.aiDifficulty === 'hard') {
-        // Hard: Strategic AI with lookahead capability and trap avoidance
-        const captureMoves = possibleMoves.filter(m => m.move.capture);
-        if (captureMoves.length > 0) {
-            // Filter out trap moves
-            let safeMoves = captureMoves.filter(m => !isCaptureTrap(m));
-            if (safeMoves.length === 0) {
-                // All captures are traps, pick least bad
-                safeMoves = captureMoves;
-            }
-            // Evaluate safe captures
-            moveToMake = safeMoves.reduce((best, current) => {
-                const bestScore = evaluateAIMove(best, true);
-                const currentScore = evaluateAIMove(current, true);
-                return currentScore > bestScore ? current : best;
-            });
-        } else {
-            // Strategic non-capture moves with lookahead
-            moveToMake = evaluateBestStrategicMove(possibleMoves);
-        }
+
+        moveToMake = bestMove || finalMoves[0];
         executeAIMove(moveToMake);
     } else {
         // Extreme: Use Web Worker for minimax with Alpha-Beta Pruning
@@ -2487,8 +2502,74 @@ function aiMakeMove() {
     }
 }
 
-function executeAIMove(moveToMake) {
-    movePiece(moveToMake.fromRow, moveToMake.fromCol, moveToMake.move.row, moveToMake.move.col, moveToMake.move);
+function executeAIMove(moveToMake, retry = false) {
+    // Validate moveToMake exists and is still legal on the current board.
+    if (!moveToMake || !gameState.board[moveToMake.fromRow] || !gameState.board[moveToMake.fromRow][moveToMake.fromCol]) {
+        console.warn('[AI] selected invalid or stale move, computing fallback');
+        // Recompute possible moves (respecting chain-capture and compulsory rules)
+        let possibleMoves;
+        if (gameState.isChainCapture && gameState.lastMovedPiece) {
+            const moves = getValidMoves(gameState.lastMovedPiece.row, gameState.lastMovedPiece.col);
+            possibleMoves = moves.map(m => ({ fromRow: gameState.lastMovedPiece.row, fromCol: gameState.lastMovedPiece.col, move: m }));
+        } else {
+            possibleMoves = getAllPossibleMoves(gameState.aiColor);
+        }
+        const captureMoves = possibleMoves.filter(m => m.move.capture);
+        if (captureMoves.length > 0) {
+            possibleMoves = orderMoves(captureMoves, gameState.aiColor);
+        } else if (gameState.gameType === 'compulsory' && !captureMoves.length) {
+            // If compulsory and no captures are available, we still need to allow the AI to move.
+            possibleMoves = getAllPossibleMoves(gameState.aiColor);
+        }
+        if (!possibleMoves || possibleMoves.length === 0) {
+            gameState.isChainCapture = false;
+            gameState.lastMovedPiece = null;
+            switchPlayer();
+            return;
+        }
+        moveToMake = possibleMoves[0];
+    } else {
+        // Ensure the target move is still present in the current valid moves for that piece
+        const currentValid = getValidMoves(moveToMake.fromRow, moveToMake.fromCol);
+        const stillValid = currentValid.some(m => m.row === moveToMake.move.row && m.col === moveToMake.move.col && (!!m.capture === !!moveToMake.move.capture));
+        if (!stillValid) {
+            console.warn('[AI] chosen move no longer valid, selecting fallback');
+            let possibleMoves = getAllPossibleMoves(gameState.aiColor);
+            const captureMoves = possibleMoves.filter(m => m.move.capture);
+            if (captureMoves.length > 0) {
+                possibleMoves = orderMoves(captureMoves, gameState.aiColor);
+            }
+            if (!possibleMoves || possibleMoves.length === 0) {
+                gameState.isChainCapture = false;
+                gameState.lastMovedPiece = null;
+                switchPlayer();
+                return;
+            }
+            moveToMake = possibleMoves[0];
+        }
+    }
+
+    const moved = movePiece(moveToMake.fromRow, moveToMake.fromCol, moveToMake.move.row, moveToMake.move.col, moveToMake.move);
+    if (!moved) {
+        console.warn('[AI] move failed, trying fallback move');
+        if (!retry) {
+            let fallbackMoves = getAllPossibleMoves(gameState.aiColor);
+            const captureMoves = fallbackMoves.filter(m => m.move.capture);
+            if (captureMoves.length > 0) {
+                fallbackMoves = orderMoves(captureMoves, gameState.aiColor);
+            }
+            if (fallbackMoves.length > 0) {
+                executeAIMove(fallbackMoves[0], true);
+                return;
+            }
+        }
+        console.error('[AI] no valid fallback move found, ending AI turn');
+        gameState.isChainCapture = false;
+        gameState.lastMovedPiece = null;
+        switchPlayer();
+        return;
+    }
+
     renderBoard();
     updateUI();
     
@@ -2499,6 +2580,18 @@ function executeAIMove(moveToMake) {
             // Chain capture available - AI continues capturing
             gameState.isChainCapture = true;
             gameState.lastMovedPiece = { row: moveToMake.move.row, col: moveToMake.move.col };
+
+            // Prevent infinite capture loops by capping consecutive chain captures.
+            gameState.chainCaptureCounter = (gameState.chainCaptureCounter || 0) + 1;
+            if (gameState.chainCaptureCounter > 20) {
+                console.warn('[AI] chain capture limit reached, aborting further captures');
+                gameState.isChainCapture = false;
+                gameState.lastMovedPiece = null;
+                gameState.chainCaptureCounter = 0;
+                switchPlayer();
+                return;
+            }
+
             setTimeout(() => {
                 aiMakeMove();
             }, 800);
@@ -2508,6 +2601,7 @@ function executeAIMove(moveToMake) {
     
     gameState.isChainCapture = false;
     gameState.lastMovedPiece = null;
+    gameState.chainCaptureCounter = 0;
     switchPlayer();
 }
 
@@ -2567,33 +2661,60 @@ function evaluateBestStrategicMove(moves) {
 }
 
 function simulateAndEvaluate(move) {
-    // Create a board copy
-    const originalBoard = gameState.board.map(row => [...row]);
-    const piece = gameState.board[move.fromRow][move.fromCol];
-    
-    // Simulate the move
-    gameState.board[move.move.row][move.move.col] = piece;
-    gameState.board[move.fromRow][move.fromCol] = null;
-    
+    return simulateAndScoreMove(move);
+}
+
+function simulateAndScoreMove(move) {
+    const boardCopy = copyBoard(gameState.board);
+    const piece = boardCopy[move.fromRow][move.fromCol];
+    if (!piece) return -Infinity;
+
+    boardCopy[move.fromRow][move.fromCol] = null;
+    boardCopy[move.move.row][move.move.col] = piece;
+
     if (move.move.capture) {
-        gameState.board[move.move.captureRow][move.move.captureCol] = null;
+        const dRow = Math.sign(move.move.row - move.fromRow);
+        const dCol = Math.sign(move.move.col - move.fromCol);
+
+        if (dRow === 0 && dCol === 0) {
+            if (Number.isInteger(move.move.captureRow) && Number.isInteger(move.move.captureCol)) {
+                boardCopy[move.move.captureRow][move.move.captureCol] = null;
+            }
+        } else {
+            let checkRow = move.fromRow + dRow;
+            let checkCol = move.fromCol + dCol;
+            let removed = false;
+
+            while (isValidSquare(checkRow, checkCol) && (checkRow !== move.move.row || checkCol !== move.move.col)) {
+                const capturedPiece = boardCopy[checkRow][checkCol];
+                if (capturedPiece && capturedPiece.color !== piece.color) {
+                    boardCopy[checkRow][checkCol] = null;
+                    removed = true;
+                    break;
+                }
+                checkRow += dRow;
+                checkCol += dCol;
+            }
+
+            if (!removed && Number.isInteger(move.move.captureRow) && Number.isInteger(move.move.captureCol)) {
+                boardCopy[move.move.captureRow][move.move.captureCol] = null;
+            }
+        }
     }
-    
-    // Check opponent's best response
-    const opponentMoves = getAllPossibleMoves(gameState.playerColor);
+
     let opponentBestThreat = 0;
-    
-    for (let oppMove of opponentMoves) {
+    const opponentColor = gameState.playerColor;
+    const opponentMoves = getAllMovesFromBoard(boardCopy, opponentColor);
+    for (const oppMove of opponentMoves) {
         if (oppMove.move.capture) {
             opponentBestThreat = Math.max(opponentBestThreat, 50);
         }
     }
-    
-    // Restore board
-    gameState.board = originalBoard;
-    
-    // Subtract threat penalty
+
     let positionScore = evaluateStrategicPosition(move) - opponentBestThreat;
+    if (!Number.isFinite(positionScore)) {
+        positionScore = -Infinity;
+    }
     return positionScore;
 }
 
