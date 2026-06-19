@@ -90,21 +90,35 @@ function loadLiveRooms() {
         });
 }
 
-function joinRoomHub(roomId) {
-    // Navigate to dama section
+async function joinRoomHub(roomId) {
+    // Navigate to the Dama section and multiplayer screens
     showSection('dama');
-
-    // Switch to multiplayer mode automatically
-    if (typeof showScreen === 'function') {
+    if (typeof showMultiplayerModeScreen === 'function') {
+        showMultiplayerModeScreen();
+    } else if (typeof showScreen === 'function') {
         showScreen('multiplayerModeScreen');
     }
 
-    // Set the input field and call join
+    // Set the room input field if present
     const input = document.getElementById('joinRoomId');
     if (input) input.value = roomId;
 
+    // Wait a little for the Dama section to finish rendering on mobile
+    await new Promise(resolve => setTimeout(resolve, 50));
+
     if (typeof joinRoom === 'function') {
-        joinRoom(roomId);
+        const joined = await joinRoom(roomId);
+        if (joined) {
+            const colorSpan = document.getElementById('playerColorSpan');
+            if (colorSpan) {
+                colorSpan.textContent = window.getTranslation(multiplayer.playerColor.toLowerCase() === 'white' ? 'dama_color_white' : 'dama_color_black', multiplayer.playerColor);
+            }
+            setTimeout(() => {
+                if (!multiplayer.gameStarted && typeof showScreen === 'function') {
+                    showScreen('waitingScreen');
+                }
+            }, 150);
+        }
     }
 }
 

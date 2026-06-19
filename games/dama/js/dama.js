@@ -174,7 +174,6 @@ if (document.readyState === 'loading') {
 // Helper to open the Dama section from SPA and ensure the mode screen is visible
 function openDamaSection() {
     initializeDama();
-    if (typeof showSection === 'function') showSection('dama');
     // Ensure internal screens state: activate modeScreen and deactivate others
     document.querySelectorAll('#dama .game-screen').forEach(el => el.classList.remove('active'));
     const mode = document.getElementById('modeScreen');

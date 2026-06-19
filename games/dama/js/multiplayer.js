@@ -183,7 +183,7 @@ async function joinRoom(roomId, gameType) {
         // Check if user is logged in
         const currentUserRaw = localStorage.getItem('currentUser');
         if (!currentUserRaw) {
-            console.warn('[DAMA JOIN DEBUG] No currentUser in localStorage');
+            console.warn('[joinRoom] No currentUser in localStorage');
             alert(window.getTranslation('mp_login_required', 'You must create an account first to play online! Opening Profile.'));
             if (typeof showSection === 'function') showSection('profile');
             return false;
@@ -193,18 +193,18 @@ async function joinRoom(roomId, gameType) {
         const username = user.username;
 
         if (!firebaseAvailable) {
-            console.warn('[DAMA JOIN DEBUG] Firestore unavailable');
+            console.warn('[joinRoom] Firestore unavailable');
             alert(window.getTranslation('mp_db_unavailable', 'Firestore not available'));
             return false;
         }
 
-        console.log('[DAMA JOIN DEBUG] Attempting to join room:', roomId, 'as user:', username);
+        console.log('[joinRoom] Attempting to join room:', roomId, 'as user:', username);
 
         const roomRef = firestore.collection('dama_rooms').doc(roomId);
         const roomSnapshot = await roomRef.get();
 
         if (!roomSnapshot.exists) {
-            console.warn('[DAMA JOIN DEBUG] Room does not exist:', roomId);
+            console.warn('[joinRoom] Room does not exist:', roomId);
             alert(window.getTranslation('mp_room_not_found', 'Room not found'));
             return false;
         }
@@ -212,13 +212,13 @@ async function joinRoom(roomId, gameType) {
         const room = roomSnapshot.data();
 
         if (room.joinerId) {
-            console.warn('[DAMA JOIN DEBUG] Room already has joinerId:', room.joinerId);
+            console.warn('[joinRoom] Room already has joinerId:', room.joinerId);
             alert(window.getTranslation('mp_room_full', 'Room is already full'));
             return false;
         }
 
         if (room.gameStarted) {
-            console.warn('[DAMA JOIN DEBUG] Room already started:', room.gameStarted);
+            console.warn('[joinRoom] Room already started:', room.gameStarted);
             alert(window.getTranslation('mp_game_started', 'Game has already started'));
             return false;
         }
@@ -250,7 +250,7 @@ async function joinRoom(roomId, gameType) {
             lastActivity: Date.now()
         });
 
-        console.log('[DAMA JOIN DEBUG] Successfully joined room:', roomId);
+        console.log('[joinRoom] Successfully joined room:', roomId);
         return true;
     } catch (error) {
         console.error('[joinRoom] Error joining room:', error);
@@ -1416,7 +1416,7 @@ async function spectateRoom(roomId) {
         const leaveGameButton = document.getElementById('leaveGameButton');
         if (leaveGameButton) {
             leaveGameButton.style.display = 'block';
-            leaveGameButton.innerHTML = '<i class="fas fa-sign-out-alt"></i> Stop Spectating';
+            leaveGameButton.innerHTML = `<i class="fas fa-sign-out-alt"></i> ${window.getTranslation('hub_action_stop_spectating', 'Stop Spectating')}`;
             leaveGameButton.onclick = function () {
                 if (roomListenerUnsubscribe) roomListenerUnsubscribe();
                 multiplayer.roomId = null;

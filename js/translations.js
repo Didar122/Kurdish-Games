@@ -47,6 +47,7 @@ window.translations = {
         "hub_game_status_live": "Live Game",
         "hub_action_join": "Join",
         "hub_action_view": "View",
+        "hub_action_stop_spectating": "Stop Spectating",
         "hub_game_title": "Dama Game",
         "hub_creator": "Creator: ",
 
@@ -400,6 +401,7 @@ window.translations = {
         "hub_game_status_live": "یاری ڕاستەوخۆ",
         "hub_action_join": "چوونەژوورەوە",
         "hub_action_view": "سەیرکردن",
+        "hub_action_stop_spectating": "وەستاندنی سەیرکردن",
         "hub_game_title": "یاری دامە",
         "hub_creator": "دروستکەر: ",
 
