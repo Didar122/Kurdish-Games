@@ -178,8 +178,7 @@ async function getAvailableRooms() {
 // Join an existing room
 async function joinRoom(roomId, gameType) {
     try {
-        updateJoinDebugMessage && updateJoinDebugMessage(`joinRoom() called for room ${roomId} with gameType ${gameType}`);
-        console.log('[DAMA JOIN DEBUG] joinRoom start', { roomId, gameType });
+        console.log('[joinRoom] start', { roomId, gameType });
 
         // Check if user is logged in
         const currentUserRaw = localStorage.getItem('currentUser');

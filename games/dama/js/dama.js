@@ -590,24 +590,6 @@ async function handleRoomAction(gameType) {
     }
 }
 
-function updateJoinDebugMessage(message, isError = false) {
-    console.log('[DAMA JOIN DEBUG]', message);
-    let debugEl = document.getElementById('joinDebugMessage');
-    if (!debugEl) {
-        const roomsList = document.getElementById('roomsList');
-        if (roomsList) {
-            debugEl = document.createElement('p');
-            debugEl.id = 'joinDebugMessage';
-            debugEl.style.cssText = 'color: #ffd966; text-align: center; margin: 0 0 1rem; font-size: 0.95rem; min-height: 1.2rem;';
-            roomsList.parentNode.insertBefore(debugEl, roomsList);
-        }
-    }
-    if (debugEl) {
-        debugEl.textContent = message;
-        debugEl.style.color = isError ? '#ff6b6b' : '#ffd966';
-    }
-}
-
 async function loadAndShowAvailableRooms() {
     const roomsList = document.getElementById('roomsList');
     roomsList.innerHTML = `<p class="loading-text">${window.getTranslation('dama_loading_rooms', 'Loading rooms...')}</p>`;
@@ -646,21 +628,15 @@ async function loadAndShowAvailableRooms() {
         joinBtn.className = 'join-room-btn';
         joinBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> ${joinLabel}`;
 
-        let joinInvoked = false;
         const joinAction = (event) => {
-            if (joinInvoked) return;
-            joinInvoked = true;
             if (event) {
                 event.preventDefault();
                 event.stopPropagation();
             }
-            updateJoinDebugMessage(`Join pressed for room ${room.roomId}`);
             joinRoomHandler(room.roomId, room.gameType);
         };
 
         joinBtn.addEventListener('click', joinAction);
-        joinBtn.addEventListener('touchend', joinAction, { passive: false });
-        joinBtn.addEventListener('pointerup', joinAction);
 
         roomEl.appendChild(roomInfo);
         roomEl.appendChild(joinBtn);
@@ -671,10 +647,8 @@ async function loadAndShowAvailableRooms() {
 }
 
 async function joinRoomHandler(roomId, gameType) {
-    updateJoinDebugMessage(`Attempting joinRoomHandler for room ${roomId}`);
     const success = await joinRoom(roomId, gameType);
     if (success) {
-        updateJoinDebugMessage(`joinRoomHandler success for room ${roomId}`);
         document.getElementById('playerColorSpan').textContent = window.getTranslation(multiplayer.playerColor.toLowerCase() === 'white' ? 'dama_color_white' : 'dama_color_black', multiplayer.playerColor);
         // Only show waiting if the game has not started yet.
         setTimeout(() => {
@@ -682,8 +656,6 @@ async function joinRoomHandler(roomId, gameType) {
                 showScreen('waitingScreen');
             }
         }, 150);
-    } else {
-        updateJoinDebugMessage(`joinRoomHandler failed for room ${roomId}`, true);
     }
 }
 
