@@ -18,6 +18,17 @@ let gameStatsData = {
         totalScore: 0,
         lastPlayed: 'Never',
         favoriteMoves: 'N/A'
+    },
+    dots_and_boxes: {
+        name: 'Dots and Boxes',
+        totalGames: 0,
+        wins: 0,
+        losses: 0,
+        onlineWins: 0,
+        onlineLosses: 0,
+        capturedBoxes: 0,
+        totalScore: 0,
+        lastPlayed: 'Never'
     }
 };
 
@@ -167,7 +178,8 @@ async function ensurePlayerDataExists(username) {
             lastGamePlayed: null
         },
         gameStats: {
-            dama: { ...gameStatsData.dama }
+            dama: { ...gameStatsData.dama },
+            dots_and_boxes: { ...gameStatsData.dots_and_boxes }
         }
     };
 
@@ -595,6 +607,18 @@ function loadPerGameStats(playerData) {
             lastPlayed: 'Never',
             favoriteMoves: 'N/A',
             ...loadedGameStats.dama
+        },
+        dots_and_boxes: {
+            name: 'Dots and Boxes',
+            totalGames: 0,
+            wins: 0,
+            losses: 0,
+            onlineWins: 0,
+            onlineLosses: 0,
+            capturedBoxes: 0,
+            totalScore: 0,
+            lastPlayed: 'Never',
+            ...loadedGameStats.dots_and_boxes
         }
     };
 }
@@ -604,38 +628,68 @@ function renderStatsForGame(gameId) {
     const statsGrid = document.getElementById('statsGrid');
     if (!statsGrid) return;
 
-    statsGrid.innerHTML = `
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
-            <div class="stat-label">${window.getTranslation('profile_stat_games', 'Total Games')}</div>
-            <div class="stat-value">${gameStats.totalGames || 0}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
-            <div class="stat-label">${window.getTranslation('profile_wins', 'Wins')}</div>
-            <div class="stat-value">${gameStats.wins || 0}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-skull-crossbones"></i></div>
-            <div class="stat-label">${window.getTranslation('profile_losses', 'Losses')}</div>
-            <div class="stat-value">${gameStats.losses || 0}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-star"></i></div>
-            <div class="stat-label">${window.getTranslation('profile_score_earned', 'Score Earned')}</div>
-            <div class="stat-value">${gameStats.totalScore || 0}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-chess-rook"></i></div>
-            <div class="stat-label">${window.getTranslation('profile_promotions', 'King Promotions')}</div>
-            <div class="stat-value">${gameStats.kingPromotions || 0}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-bomb"></i></div>
-            <div class="stat-label">${window.getTranslation('profile_captures', 'Captures')}</div>
-            <div class="stat-value">${gameStats.captures || 0}</div>
-        </div>
-    `;
+    if (gameId === 'dots_and_boxes') {
+        statsGrid.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_stat_games', 'Total Games')}</div>
+                <div class="stat-value">${gameStats.totalGames || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_wins', 'Wins')}</div>
+                <div class="stat-value">${gameStats.wins || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-skull-crossbones"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_losses', 'Losses')}</div>
+                <div class="stat-value">${gameStats.losses || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-star"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_score_earned', 'Score Earned')}</div>
+                <div class="stat-value">${gameStats.totalScore || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-th"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_captured_boxes', 'Captured Boxes')}</div>
+                <div class="stat-value">${gameStats.capturedBoxes || 0}</div>
+            </div>
+        `;
+    } else {
+        statsGrid.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_stat_games', 'Total Games')}</div>
+                <div class="stat-value">${gameStats.totalGames || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_wins', 'Wins')}</div>
+                <div class="stat-value">${gameStats.wins || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-skull-crossbones"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_losses', 'Losses')}</div>
+                <div class="stat-value">${gameStats.losses || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-star"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_score_earned', 'Score Earned')}</div>
+                <div class="stat-value">${gameStats.totalScore || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chess-rook"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_promotions', 'King Promotions')}</div>
+                <div class="stat-value">${gameStats.kingPromotions || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-bomb"></i></div>
+                <div class="stat-label">${window.getTranslation('profile_captures', 'Captures')}</div>
+                <div class="stat-value">${gameStats.captures || 0}</div>
+            </div>
+        `;
+    }
 }
 
 function initGameTabs() {
@@ -801,6 +855,7 @@ async function updateGameStats(gameId, result, score = 0, stats = {}) {
                     onlineLosses: 0,
                     captures: 0,
                     kingPromotions: 0,
+                    capturedBoxes: 0,
                     totalScore: 0,
                     lastPlayed: 'Never',
                     favoriteMoves: 'N/A'
@@ -816,6 +871,7 @@ async function updateGameStats(gameId, result, score = 0, stats = {}) {
             if (result === 'online-loss') entry.onlineLosses = (entry.onlineLosses || 0) + 1;
             if (stats.captures) entry.captures = (entry.captures || 0) + stats.captures;
             if (stats.kingPromotions) entry.kingPromotions = (entry.kingPromotions || 0) + stats.kingPromotions;
+            if (stats.capturedBoxes) entry.capturedBoxes = (entry.capturedBoxes || 0) + stats.capturedBoxes;
             if (stats.lastPlayed) entry.lastPlayed = stats.lastPlayed;
             if (stats.favoriteMoves) entry.favoriteMoves = stats.favoriteMoves;
 
@@ -825,7 +881,7 @@ async function updateGameStats(gameId, result, score = 0, stats = {}) {
         const playerData = getPlayerDataFromStorage(currentUser.username) || await ensurePlayerDataExists(currentUser.username);
         if (!playerData.gameStats) playerData.gameStats = {};
         if (!playerData.gameStats[gameId]) {
-            playerData.gameStats[gameId] = { ...gameStatsData.dama, name: gameId };
+            playerData.gameStats[gameId] = { ...(gameStatsData[gameId] || gameStatsData.dama), name: gameId };
         }
 
         const entry = playerData.gameStats[gameId];
@@ -837,6 +893,7 @@ async function updateGameStats(gameId, result, score = 0, stats = {}) {
         if (result === 'online-loss') entry.onlineLosses = (entry.onlineLosses || 0) + 1;
         if (stats.captures) entry.captures = (entry.captures || 0) + stats.captures;
         if (stats.kingPromotions) entry.kingPromotions = (entry.kingPromotions || 0) + stats.kingPromotions;
+        if (stats.capturedBoxes) entry.capturedBoxes = (entry.capturedBoxes || 0) + stats.capturedBoxes;
         if (stats.lastPlayed) entry.lastPlayed = stats.lastPlayed;
         if (stats.favoriteMoves) entry.favoriteMoves = stats.favoriteMoves;
 
@@ -886,7 +943,7 @@ async function updatePlayerStats(gameType, result, score, coinsEarned = 0, playt
             } else if (gameType === 'two-player') {
                 playerData.stats.twoPlayerGames = (playerData.stats.twoPlayerGames || 0) + 1;
                 playerData.stats.singlePlayerGames = (playerData.stats.singlePlayerGames || 0) + 1;
-            } else if (gameType === 'online-multiplayer') {
+            } else if (gameType === 'online-multiplayer' || gameType === 'online') {
                 playerData.stats.onlineGames = (playerData.stats.onlineGames || 0) + 1;
                 if (result === 'win') {
                     playerData.stats.onlineWins = (playerData.stats.onlineWins || 0) + 1;
@@ -911,7 +968,7 @@ async function updatePlayerStats(gameType, result, score, coinsEarned = 0, playt
         } else if (gameType === 'two-player') {
             playerData.stats.twoPlayerGames = (playerData.stats.twoPlayerGames || 0) + 1;
             playerData.stats.singlePlayerGames = (playerData.stats.singlePlayerGames || 0) + 1;
-        } else if (gameType === 'online-multiplayer') {
+        } else if (gameType === 'online-multiplayer' || gameType === 'online') {
             playerData.stats.onlineGames = (playerData.stats.onlineGames || 0) + 1;
             if (result === 'win') {
                 playerData.stats.onlineWins = (playerData.stats.onlineWins || 0) + 1;
@@ -1006,7 +1063,7 @@ async function updateOtherPlayerStats(username, gameType, result, score, coinsEa
         } else if (gameType === 'two-player') {
             playerData.stats.twoPlayerGames = (playerData.stats.twoPlayerGames || 0) + 1;
             playerData.stats.singlePlayerGames = (playerData.stats.singlePlayerGames || 0) + 1;
-        } else if (gameType === 'online-multiplayer') {
+        } else if (gameType === 'online-multiplayer' || gameType === 'online') {
             playerData.stats.onlineGames = (playerData.stats.onlineGames || 0) + 1;
             if (result === 'win') {
                 playerData.stats.onlineWins = (playerData.stats.onlineWins || 0) + 1;
@@ -1039,6 +1096,7 @@ async function updateOtherGameStats(username, gameId, result, score = 0, stats =
                 onlineLosses: 0,
                 captures: 0,
                 kingPromotions: 0,
+                capturedBoxes: 0,
                 totalScore: 0,
                 lastPlayed: 'Never',
                 favoriteMoves: 'N/A'
@@ -1054,6 +1112,7 @@ async function updateOtherGameStats(username, gameId, result, score = 0, stats =
         if (result === 'online-loss') entry.onlineLosses = (entry.onlineLosses || 0) + 1;
         if (stats.captures) entry.captures = (entry.captures || 0) + stats.captures;
         if (stats.kingPromotions) entry.kingPromotions = (entry.kingPromotions || 0) + stats.kingPromotions;
+        if (stats.capturedBoxes) entry.capturedBoxes = (entry.capturedBoxes || 0) + stats.capturedBoxes;
         if (stats.lastPlayed) entry.lastPlayed = stats.lastPlayed;
         if (stats.favoriteMoves) entry.favoriteMoves = stats.favoriteMoves;
 

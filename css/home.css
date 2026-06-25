@@ -32,6 +32,32 @@ html, body {
     font-family: var(--font-family);
 }
 
+/* Games info grid */
+.games-info-grid { display:flex; gap:18px; justify-content:center; align-items:flex-start; }
+.games-info-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 12px; width: 170px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; transition: transform 0.18s ease, box-shadow 0.18s ease; }
+.games-info-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.45); }
+.games-info-thumb { width: 140px; height: 140px; object-fit: contain; border-radius:8px; }
+.games-info-name { color:#fff; font-weight:700; text-align:center; }
+
+/* Mobile: two cards per row */
+@media (max-width: 600px) {
+    .games-info-card { width: calc(50% - 12px); }
+    /* Make thumbnails larger on phones but keep them responsive */
+    .games-info-thumb { width: min(160px, calc(100% - 24px)); height: min(160px, calc(100% - 24px)); max-width: none; max-height: none; }
+}
+
+/* Modal icon styling */
+.game-info-icon { width: 140px; height: 140px; object-fit: contain; border-radius: 12px; display:block; margin:0 auto 8px; }
+@media (max-width: 600px) { .game-info-icon { width: 140px; height: 140px; } }
+
+/* Modal animation helpers */
+.global-modal .global-modal-content.game-info-modal { opacity: 0; transform: translateY(-10px) scale(0.98); transition: opacity 220ms ease, transform 260ms cubic-bezier(.2,.9,.2,1); }
+.global-modal:not(.hidden) .global-modal-content.game-info-modal { opacity: 1; transform: translateY(0) scale(1); }
+.game-info-content { max-height: 60vh; overflow-y: auto; }
+
+/* Contact button tweaks */
+.contact-btn i { vertical-align: middle; }
+
 /* =====================================================
    BACKGROUND STYLING
    ===================================================== */

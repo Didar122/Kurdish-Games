@@ -1,0 +1,1093 @@
+/* =====================================================
+   KURDISH GAMES - EVENTS SECTION STYLING
+   ===================================================== */
+
+/* Section Layout & Shell */
+#eventsSection.section {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#eventsSection .games-shell {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 7rem;
+}
+
+/* We use .games-shell from games.css for consistent full-width wrapper alignment */
+
+/* Standard Premium Buttons inside Events Page */
+.events-shell .btn,
+.events-shell .btn-primary,
+.events-shell .login-redirect-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    text-align: center;
+    background: linear-gradient(135deg, #3778ff, #1a9fff) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(55, 120, 255, 0.4) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.events-shell .btn:hover,
+.events-shell .btn-primary:hover,
+.events-shell .login-redirect-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(55, 120, 255, 0.55) !important;
+}
+
+.events-shell .btn:active,
+.events-shell .btn-primary:active,
+.events-shell .login-redirect-btn:active {
+    transform: translateY(0);
+}
+
+.events-shell .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Authentication Guard View */
+.events-auth-guard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 30px 1.5rem 120px;
+    gap: 35px;
+    box-sizing: border-box;
+}
+
+.auth-guard-panel {
+    background: rgba(15, 28, 56, 0.45); /* slightly more transparent */
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    padding: 35px 25px;
+    text-align: center;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    max-width: 480px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.auth-guard-panel .guard-icon {
+    font-size: 3.2rem;
+    color: #ef4444;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.45);
+}
+
+.auth-guard-panel h2 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.auth-guard-panel p {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.login-redirect-btn {
+    width: 100%;
+    padding-block: 0.9rem;
+    font-size: 1.05rem;
+}
+
+/* Guest Rewards Preview Container */
+.rewards-preview-container {
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+.rewards-preview-container h3 {
+    color: #ffd700;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.4;
+}
+
+.preview-rewards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    width: 100%;
+}
+
+.preview-reward-card {
+    background: rgba(255, 255, 255, 0.05); /* more transparent */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.reward-icon-badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.coins-badge {
+    background: linear-gradient(135deg, #ffd700, #ffae00);
+    color: #4a3b00;
+}
+
+.diamonds-badge {
+    background: linear-gradient(135deg, #ec4899, #d946ef);
+    color: #ffffff;
+}
+
+.chest-badge {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #ffffff;
+}
+
+.preview-reward-name {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 700;
+}
+
+/* Floating Animations */
+.float-anim-1 { animation: floatEffect 3.5s ease-in-out infinite; }
+.float-anim-2 { animation: floatEffect 3.5s ease-in-out infinite 0.6s; }
+.float-anim-3 { animation: floatEffect 3.5s ease-in-out infinite 1.2s; }
+
+@keyframes floatEffect {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Active Content View (Split Layout) */
+.events-active-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 4rem;
+    margin: 0;
+}
+
+.events-main-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 25px;
+    width: 100%;
+}
+
+/* Sidebar Tab Buttons */
+.events-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.events-tab-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1.1rem 1.3rem;
+    min-height: 64px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: all 0.25s ease;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.events-tab-btn i {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+}
+
+.events-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.events-tab-btn.active {
+    background: linear-gradient(135deg, #3778ff, #1a9fff);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 8px 20px rgba(55, 120, 255, 0.4);
+}
+
+.events-tab-btn.active i {
+    color: #ffffff;
+}
+
+/* Sidebar badges and menu red dots */
+.tab-badge, .events-badge {
+    background-color: #ef4444;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+}
+
+.tab-badge {
+    width: 8px;
+    height: 8px;
+    margin-left: auto;
+}
+
+/* Game section header badges inside Daily Challenges tab */
+.daily-challenge-game-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.game-label-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.game-label-badge.dama-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #1a0a00;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.game-label-badge.dots-badge {
+    background: linear-gradient(135deg, #acb1bb, #e5e6e9);
+    color: #000000;
+    box-shadow: 0 4px 12px rgb(141, 141, 141);
+}
+
+.events-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    animation: pulsingBadge 1.8s infinite;
+}
+
+@keyframes pulsingBadge {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.75; }
+}
+
+/* Pulsing Green dot for multiplayer button */
+.multiplayer-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 12px;
+    height: 12px;
+    background-color: #10b981; /* green dot */
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+    animation: pulsingGreenBadge 1.8s infinite;
+}
+
+@keyframes pulsingGreenBadge {
+    0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 8px rgba(16, 185, 129, 0.8); }
+    50% { transform: scale(1.3); opacity: 0.75; box-shadow: 0 0 15px rgba(16, 185, 129, 1); }
+}
+
+/* Right Content Area (Lighter and more transparent) */
+.events-content-area {
+    background: rgba(15, 28, 56, 0.22); /* More transparent background */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 25px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+}
+
+.event-tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.event-tab-content.active {
+    display: block;
+}
+
+.event-tab-content h2 {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.section-desc {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 7-DAY LOGIN STREAK: 3-LINE GRID LAYOUT */
+.daily-login-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns layout: Row 1 = 3 days, Row 2 = 3 days, Row 3 = Day 7 spans full width */
+    gap: 12px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Day Cards Layout & Sizing */
+.day-card {
+    background: rgba(255, 255, 255, 0.03); /* More transparent regular cards */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 95px;
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+    position: relative;
+    box-sizing: border-box;
+}
+
+.day-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    text-align: center;
+}
+
+.day-reward-icon {
+    font-size: 1.8rem;
+    margin-block: 2px;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.day-reward-amount {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    word-break: break-word;
+}
+
+.day-card .status-indicator {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.75rem;
+}
+
+/* State: Claimed */
+.day-card.claimed {
+    opacity: 0.55;
+    background: rgba(255, 255, 255, 0.01); /* More transparent claimed cards */
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.day-card.claimed .day-title,
+.day-card.claimed .day-reward-amount {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.day-card.claimed .status-indicator {
+    color: #10b981;
+}
+
+/* State: Available to Claim */
+.day-card.claimable {
+    background: rgba(55, 120, 255, 0.12);
+    border-color: rgba(55, 120, 255, 0.55);
+    box-shadow: 0 0 12px rgba(55, 120, 255, 0.25);
+    cursor: pointer;
+}
+
+.day-card.claimable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(55, 120, 255, 0.4);
+    border-color: #3778ff;
+}
+
+.day-card.claimable .day-title {
+    color: #7dd3fc;
+}
+
+.day-card.claimable .day-reward-icon {
+    transform: scale(1.1);
+    animation: claimWobble 2.5s infinite;
+}
+
+@keyframes claimWobble {
+    0%, 100% { transform: scale(1.1) rotate(0); }
+    10%, 20% { transform: scale(1.1) rotate(-6deg); }
+    30%, 50%, 70%, 90% { transform: scale(1.1) rotate(6deg); }
+    40%, 60%, 80% { transform: scale(1.1) rotate(-6deg); }
+}
+
+.day-card.claimable .status-indicator {
+    color: #3b82f6;
+    animation: pulseGlow 1.5s infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* State: Locked (CLEAR TEXT AND REWARD VISIBILITY - DARK FROSTED CARD) */
+.day-card.locked {
+    background: rgba(10, 18, 38, 0.35); /* More transparent locked background */
+    border: 1.5px dashed rgba(255, 255, 255, 0.25);
+    opacity: 1;
+}
+
+.day-card.locked .status-indicator {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.day-card.locked .day-title {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.day-card.locked .day-reward-amount {
+    color: #ffffff;
+}
+
+.day-card.locked .day-reward-icon {
+    filter: none;
+    opacity: 1;
+}
+
+/* Special Styling for Day 7 (Premium reward - spans all 3 columns with legendary animation) */
+.day-card.day7 {
+    grid-column: span 3; /* Spans all 3 columns to cover row 3 */
+    min-height: 135px; /* Bigger container */
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.18) 0%, rgba(255, 174, 0, 0.08) 100%) !important;
+    border: 2px solid rgba(255, 215, 0, 0.6) !important;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.25);
+    position: relative;
+    overflow: hidden;
+    animation: legendaryGlow 3s infinite ease-in-out;
+}
+
+/* Shining light sweep effect across Day 7 Card */
+.day-card.day7::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent 0%, rgba(255, 215, 0, 0.4) 50%, transparent 100%);
+    transform: skewX(-25deg);
+    animation: legendarySweep 6s infinite ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes legendarySweep {
+    0% { left: -150%; }
+    30% { left: 150%; }
+    100% { left: 150%; }
+}
+
+@keyframes legendaryGlow {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.25), inset 0 0 10px rgba(255, 215, 0, 0.15);
+        border-color: rgba(255, 215, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.35);
+        border-color: rgba(255, 215, 0, 1);
+    }
+}
+
+.day-card.day7.claimable {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.25) 0%, rgba(255, 174, 0, 0.14) 100%) !important;
+    border-color: rgba(255, 215, 0, 0.8) !important;
+}
+
+.day-card.day7.claimable:hover {
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.45);
+    border-color: #ffd700 !important;
+}
+
+.day-card.day7.claimable .day-title {
+    color: #ffae00;
+    text-shadow: 0 0 5px rgba(255, 174, 0, 0.3);
+}
+
+.day-card.day7.claimed {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    box-shadow: none;
+    animation: none;
+}
+
+.day-card.day7.claimed::after {
+    display: none;
+}
+
+/* Daily Challenge Card Styles (Lighter and more transparent) */
+.daily-challenge-card {
+    background: rgba(255, 255, 255, 0.02); /* More transparent background */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.challenge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 12px;
+}
+
+.challenge-difficulty-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.difficulty-easy { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+.difficulty-medium { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.3); }
+.difficulty-hard { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+.difficulty-extreme { background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(139, 92, 246, 0.25)); color: #ff6b6b; border: 1px solid rgba(239, 68, 68, 0.45); box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+
+.challenge-reward-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.challenge-reward-badge.coins { color: #ffd700; }
+.challenge-reward-badge.diamonds { color: #f43f5e; }
+
+.challenge-details h3 {
+    font-size: 1.15rem;
+    color: #ffffff;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+/* Progress bar */
+.challenge-progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.challenge-progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 700;
+}
+
+.challenge-progress-outer {
+    height: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.challenge-progress-inner {
+    height: 100%;
+    background: linear-gradient(90deg, #3778ff, #7dd3fc);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px rgba(55, 120, 255, 0.4);
+}
+
+.challenge-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+/* Upcoming Tournaments placeholder (More transparent + side spaces + bottom offset) */
+.upcoming-events-container {
+    background: rgba(15, 28, 56, 0.28); /* Lighter and more transparent */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: 35px;
+    margin-bottom: 130px; /* space so it is never covered by footer bottom bar */
+    width: 100%;
+    max-width: none;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.upcoming-events-container .upcoming-icon {
+    font-size: 3rem;
+    color: #ffd700;
+    margin-bottom: 15px;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    display: inline-block;
+}
+
+.upcoming-events-container h3 {
+    font-size: 1.3rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.upcoming-events-container p {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* =====================================================
+   TREASURE CHEST MODAL & ROULETTE REEL PICKER
+   ==================================================== */
+.chest-modal-content {
+    background: rgba(10, 18, 38, 0.96) !important;
+    border-color: rgba(255, 215, 0, 0.2) !important;
+    max-width: 480px !important;
+    padding: 40px 25px !important;
+}
+
+.chest-animation-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.chest-glow {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 1;
+    animation: pulseChestGlow 2s infinite ease-in-out;
+}
+
+@keyframes pulseChestGlow {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.25); opacity: 1; }
+}
+
+.chest-box-wrapper {
+    position: relative;
+    z-index: 2;
+    font-size: 5.5rem;
+    color: #ffd700;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    margin-bottom: 15px;
+}
+
+.chest-icon-animated {
+    display: inline-block;
+}
+
+.chest-icon-animated.shake {
+    animation: chestShaking 0.5s infinite;
+}
+
+.chest-icon-animated.open {
+    animation: chestOpening 0.6s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes chestShaking {
+    0%, 100% { transform: rotate(0) scale(1); }
+    20% { transform: rotate(-8deg) scale(1.05); }
+    40% { transform: rotate(8deg) scale(1.05); }
+    60% { transform: rotate(-5deg) scale(1.05); }
+    80% { transform: rotate(5deg) scale(1.05); }
+}
+
+@keyframes chestOpening {
+    0% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.3) translateY(-15px); color: #ffae00; }
+    100% { transform: scale(1.15) translateY(0); color: #ffffff; text-shadow: 0 0 40px rgba(255, 255, 255, 0.8); }
+}
+
+.chest-animation-container h2 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    text-align: center;
+    margin: 0;
+}
+
+/* Horizontal Roulette Reel Picker */
+.picker-roller-container {
+    position: relative;
+    width: 100%;
+    height: 90px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.picker-roller-track {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-inline: 190px;
+    transform: translateX(0);
+    will-change: transform;
+}
+
+.picker-pointer {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #ef4444;
+    box-shadow: 0 0 10px #ef4444;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.picker-pointer::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #ef4444;
+}
+
+.picker-pointer::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #ef4444;
+}
+
+.reel-item {
+    width: 76px;
+    height: 76px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    gap: 4px;
+    box-sizing: border-box;
+}
+
+.reel-item.gold-tier {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.reel-item.purple-tier {
+    border-color: #d946ef;
+    background: rgba(217, 70, 239, 0.05);
+}
+
+.reel-item span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.chest-result-display {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.won-prize-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #ffd700;
+    border-radius: 20px;
+    padding: 25px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15);
+}
+
+.won-prize-card .prize-icon {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
+}
+
+.won-prize-card .prize-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.won-prize-card .prize-rarity {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.prize-rarity.common { background: rgba(255,255,255,0.1); color: #ccc; }
+.prize-rarity.rare { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.prize-rarity.epic { background: rgba(139,92,246,0.15); color: #a78bfa; }
+.prize-rarity.legendary { background: rgba(255,215,0,0.15); color: #ffd700; border: 1px solid rgba(255,215,0,0.3); animation: itemGlow 1.5s infinite; }
+
+@keyframes itemGlow {
+    0%, 100% { box-shadow: 0 0 10px rgba(255,215,0,0.2); }
+    50% { box-shadow: 0 0 20px rgba(255,215,0,0.5); }
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.claim-chest-btn {
+    width: 100%;
+    padding-block: 1rem;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 20px rgba(255, 174, 0, 0.3);
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN & MOBILE SCALING
+   ===================================================== */
+@media (max-width: 768px) {
+    .events-main-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 15px;
+    }
+    
+    .events-sidebar {
+        flex-direction: row;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        padding: 10px 12px 6px;
+        flex-wrap: nowrap;
+        gap: 8px;
+        box-sizing: border-box;
+    }
+    
+    .events-sidebar .events-tab-btn:first-child {
+        margin-left: 2px;
+    }
+
+    .events-tab-btn {
+        flex: 0 0 auto;
+        min-width: 120px;
+        padding: 12px 12px;
+        min-height: 60px;
+        font-size: 0.85rem;
+        justify-content: center;
+        white-space: nowrap;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+    
+    .events-content-area {
+        padding: 15px;
+        border-radius: 18px;
+    }
+    
+    .daily-login-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .day-card {
+        min-height: 85px;
+        padding: 10px 4px;
+    }
+    
+    .day-card.day7 {
+        min-height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .events-auth-guard {
+        padding-inline: 0.75rem;
+        padding-top: 15px;
+        gap: 25px;
+    }
+
+    .auth-guard-panel {
+        padding: 25px 15px;
+    }
+
+    .preview-rewards-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .preview-reward-card {
+        padding: 10px 5px;
+        border-radius: 12px;
+    }
+    
+    .reward-icon-badge {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .preview-reward-name {
+        font-size: 0.75rem;
+    }
+
+    .daily-login-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+    
+    .day-card {
+        min-height: 75px;
+        padding: 6px 3px;
+        border-radius: 10px;
+    }
+    
+    .day-card.day7 {
+        min-height: 110px;
+    }
+    
+    .day-title {
+        font-size: 0.65rem;
+    }
+
+    .day-reward-icon {
+        font-size: 1.35rem;
+        margin-block: 1px;
+    }
+    
+    .day-reward-amount {
+        font-size: 0.65rem;
+    }
+    
+    .upcoming-events-container {
+        padding: 20px 15px;
+        margin-top: 20px;
+        border-radius: 18px;
+    }
+    
+    .upcoming-events-container .upcoming-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .upcoming-events-container h3 {
+        font-size: 1.15rem;
+    }
+    
+    .upcoming-events-container p {
+        font-size: 0.85rem;
+    }
+}

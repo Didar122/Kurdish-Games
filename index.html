@@ -19,7 +19,9 @@
     <link rel="stylesheet" href="css/store.css">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/social.css">
+    <link rel="stylesheet" href="css/events.css">
     <link rel="stylesheet" href="games/dama/css/dama.css">
+    <link rel="stylesheet" href="games/dots-and-boxes/css/dots-and-boxes.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -52,6 +54,7 @@
                     <p>By : Didar Baxtear</p>
                 </div>
             </div>
+            
         </div>
     </div>
 
@@ -76,11 +79,13 @@
                     <button class="menu-button btn-multiplayer" data-label="MULTIPLAYER">
                         <span class="btn-icon"><i class="fas fa-users"></i></span>
                         <span class="btn-text">MULTIPLAYER</span>
+                        <span id="multiplayerBtnBadge" class="multiplayer-badge hidden"></span>
                     </button>
 
                     <button class="menu-button btn-events" data-label="EVENTS">
                         <span class="btn-icon"><i class="fas fa-calendar-alt"></i></span>
                         <span class="btn-text">EVENTS</span>
+                        <span id="eventsBtnBadge" class="events-badge hidden"></span>
                     </button>
 
                     <button class="menu-button btn-settings" data-label="SETTINGS">
@@ -165,6 +170,21 @@
                     </div>
                     <div class="card-footer">
                         <button class="card-button" onclick="showSection('dama')">Play Dama</button>
+                    </div>
+                </article>
+
+                <article class="game-card">
+                    <div class="card-top">
+                        <span class="card-badge" data-translate="games_dots_and_boxes_badge">Dots & Boxes</span>
+                        <span class="card-tag" data-translate="games_dots_and_boxes_tag">New</span>
+                    </div>
+                    <img src="games/dots-and-boxes/assets/images/Cover.png" alt="Dots and Boxes Game" class="card-image">
+                    <div class="card-body">
+                        <h2 data-translate="games_dots_and_boxes_title">Dots and Boxes</h2>
+                        <p data-translate="games_dots_and_boxes_desc">Connect dots, claim boxes, and claim victory.</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-button" onclick="showSection('dots_and_boxes')" data-translate="games_dots_and_boxes_play">Play Dots and Boxes</button>
                     </div>
                 </article>
 
@@ -379,56 +399,55 @@
                 <div
                     style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
                     <img id="aboutAppIcon" src="assets/images/icon.png" style="width: 140px; height:140px; object-fit:contain; margin-bottom: 12px; border-radius: 12px;" alt="Logo">
-                    <div id="aboutVersion" style="color:#ccc; font-weight:700; margin-bottom:8px;">v1.0.3</div>
+                    <div id="aboutVersion" style="color:#ccc; font-weight:700; margin-bottom:8px;">v1.1.2</div>
                     <h2>Kurdish Games Hub</h2>
                     <p style="color: #ccc; margin-top: 10px;">A unified platform to play traditional and modern games.
                     </p>
                 </div>
 
-                <div class="about-accordion"
-                    style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px;">
-                    <!-- About Dama Accordion -->
-                    <div class="settings-group" style="margin-bottom: 0;">
-                        <div class="settings-group-header collapsed"
-                            onclick="toggleSettingsGroup('aboutDamaGroup', this)">
-                            <span><i class="fas fa-chess-board" style="margin-right: 10px;"></i><span
-                                    data-translate="about_dama_title">About Dama</span></span>
-                            <i class="fas fa-chevron-down toggle-arrow"></i>
-                        </div>
-                        <div id="aboutDamaGroup" class="settings-group-content collapsed"
-                            style="color: #ccc; font-size: 0.95rem; line-height: 1.6; padding: 20px;">
-                            <span data-translate="about_dama_desc">Dama is a traditional board game widely played in
-                                Kurdistan and the Middle East. It relies heavily on strategy, forward planning, and
-                                positioning. Our implementation features local multiplayer, an AI opponent, and online
-                                rooms to challenge your friends!</span>
-                        </div>
+                <!-- Games Information -->
+                <div class="about-panel" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 18px; margin-bottom: 18px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <div style="text-align:center; margin-bottom:12px;">
+                        <h2 data-translate="games_information_title">Games Informations</h2>
                     </div>
 
-                    <!-- Upcoming Games Accordion -->
-                    <div class="settings-group" style="margin-bottom: 0;">
-                        <div class="settings-group-header collapsed"
-                            onclick="toggleSettingsGroup('aboutUpcomingGroup', this)">
-                            <span><i class="fas fa-hourglass-start" style="margin-right: 10px;"></i><span
-                                    data-translate="about_upcoming_title">Other Games Coming Soon</span></span>
-                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                    <div class="games-info-grid" style="display:flex; gap:18px; justify-content:center; flex-wrap:wrap;">
+                        <button class="games-info-card" onclick="showGameModal('dama')">
+                            <img src="games/dama/assets/images/icon.png" alt="Dama" class="games-info-thumb">
+                            <div class="games-info-name" data-translate="games_dama_title">Dama</div>
+                        </button>
+
+                        <button class="games-info-card" onclick="showGameModal('dots_and_boxes')">
+                            <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes" class="games-info-thumb">
+                            <div class="games-info-name" data-translate="games_dots_and_boxes_title">Dots &amp; Boxes</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reusable full info modal for games -->
+                <div id="gameInfoModal" class="global-modal hidden">
+                    <div class="global-modal-overlay" onclick="closeGameModal()"></div>
+                    <div class="global-modal-content game-info-modal">
+                        <button class="modal-close-btn" onclick="closeGameModal()"><i class="fas fa-times"></i></button>
+                        <div class="game-info-header" style="text-align:center; margin-bottom:12px;">
+                            <img id="gameInfoIcon" class="game-info-icon" src="" alt="">
+                            <h2 id="gameInfoTitle">Title</h2>
                         </div>
-                        <div id="aboutUpcomingGroup" class="settings-group-content collapsed"
-                            style="color: #ccc; font-size: 0.95rem; line-height: 1.6; padding: 20px;">
-                            <span data-translate="about_upcoming_desc">More games are currently in development. Stay
-                                tuned for traditional Kurdish games coming to this hub!</span>
+                        <div id="gameInfoContent" class="game-info-content" style="color:#cfdff8; text-align:center; line-height:1.6;">
+                        </div>
+                        <div style="text-align:center; margin-top:16px;">
+                            <button class="card-button" onclick="closeGameModal()" data-translate="close">Close</button>
                         </div>
                     </div>
                 </div>
 
-                <div
-                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
-                    <h3><i class="fas fa-code" style="margin-right: 10px;"></i>Developer</h3>
+                <div class="developer-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 12px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); text-align:center;">
+                    <h3><i class="fas fa-code" style="margin-right: 10px;"></i><span data-translate="about_dev_title">Developer</span></h3>
                     <p id="aboutDevName" style="margin-top: 10px; color: #ccc;">Developed by Didar Baxtear</p>
                 </div>
 
-                <a id="moreGamesLink" href="https://didar122.github.io/Didar-Library/index.html" target="_blank"
-                    style="display: block; width: 100%; padding: 15px; background: #3b82f6; color: white; text-align: center; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-                    <i class="fas fa-gamepad" style="margin-right: 10px;"></i><span data-translate="about_more_games">More Games By Developer</span>
+                <a id="contactMeBtn" href="https://wa.me/9647700071762" target="_blank" class="contact-btn" style="display:block; width:100%; text-align:center; padding:12px; background:#25D366; color:white; border-radius:8px; font-weight:700; text-decoration:none;">
+                    <i class="fab fa-whatsapp" style="margin-right:8px;"></i><span data-translate="contact_me">Contact Me</span>
                 </a>
             </section>
         </div>
@@ -994,6 +1013,386 @@
         </div>
     </div>
 
+    <!-- Dots and Boxes Section -->
+    <div id="dots_and_boxes" class="section hidden">
+
+        <!-- Mode Selection Screen -->
+        <div id="dots_modeScreen" class="dots-game-screen active">
+            <div class="game-background" id="dots_modeBackground"></div>
+            <div class="mode-container">
+                <div class="game-header">
+                    <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes Icon" class="game-icon">
+                    <h1 data-translate="dots_title">Dots and Boxes</h1>
+                    <p data-translate="dots_subtitle">Connect dots, claim boxes - پێنج پێنج</p>
+                </div>
+
+                <div class="mode-selection">
+                    <button class="dots-mode-button" data-mode="single-player">
+                        <i class="fas fa-user"></i>
+                        <span data-translate="dots_single_player">Single Player</span>
+                    </button>
+                    <button class="dots-mode-button" data-mode="two-player">
+                        <i class="fas fa-users"></i>
+                        <span data-translate="dots_two_player">Two Players</span>
+                    </button>
+                    <button class="dots-mode-button" data-mode="online-multiplayer" onclick="showDotsMultiplayerModeScreen()">
+                        <i class="fas fa-globe"></i>
+                        <span data-translate="dots_online_multiplayer">Online Multiplayer</span>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-to-games" onclick="showSection('games')">
+                        <i class="fas fa-arrow-left"></i> Back to Games
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid Size / Type Selection Screen -->
+        <div id="dots_typeScreen" class="dots-game-screen">
+            <div class="game-background" id="dots_typeBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes Icon" class="game-icon">
+                    <h1 data-translate="dots_select_type">Select Grid Size</h1>
+                </div>
+
+                <div class="type-selection">
+                    <button class="dots-type-button" data-type="normal">
+                        <i class="fas fa-th-large"></i>
+                        <h3 data-translate="dots_type_normal_title">Normal Size Grid</h3>
+                        <p data-translate="dots_type_normal_desc">Standard 6x6 dots grid.</p>
+                    </button>
+                    <button class="dots-type-button" data-type="large">
+                        <i class="fas fa-th"></i>
+                        <h3 data-translate="dots_type_large_title">Large Size Grid</h3>
+                        <p data-translate="dots_type_large_desc">Expansive 20x20 dots grid with camera controls.</p>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToDotsModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Difficulty Screen -->
+        <div id="dots_difficultyScreen" class="dots-game-screen">
+            <div class="game-background" id="dots_difficultyBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes Icon" class="game-icon">
+                    <h1 data-translate="dots_select_difficulty">Select Difficulty</h1>
+                    <p data-translate="dots_difficulty_desc">Choose your opponent's skill level</p>
+                </div>
+
+                <div class="difficulty-selection">
+                    <button class="dots-difficulty-button" data-difficulty="easy">
+                        <i class="fas fa-smile"></i>
+                        <h3 data-translate="dots_diff_easy">Easy</h3>
+                        <p data-translate="dots_diff_easy_desc">AI makes random moves</p>
+                    </button>
+                    <button class="dots-difficulty-button" data-difficulty="medium">
+                        <i class="fas fa-meh"></i>
+                        <h3 data-translate="dots_diff_medium">Medium</h3>
+                        <p data-translate="dots_diff_medium_desc">AI claims and blocks</p>
+                    </button>
+                    <button class="dots-difficulty-button" data-difficulty="hard">
+                        <i class="fas fa-frown"></i>
+                        <h3 data-translate="dots_diff_hard">Hard</h3>
+                        <p data-translate="dots_diff_hard_desc">AI plans moves</p>
+                    </button>
+                    <button class="dots-difficulty-button" data-difficulty="extreme">
+                        <i class="fas fa-skull"></i>
+                        <h3 data-translate="dots_diff_extreme">Extreme</h3>
+                        <p data-translate="dots_diff_extreme_desc">Unbeatable AI</p>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToDotsTypeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Game Screen -->
+        <div id="dots_gameScreen" class="dots-game-screen">
+            <div class="game-background" id="dots_gameBackground"></div>
+            <div class="game-container">
+                <div class="game-top-bar">
+                    <div id="dots_multiplayerVsInfo" style="display: none; justify-content: center; align-items: center; gap: 20px; width: 100%; margin-bottom: 15px;"></div>
+                    <div class="game-info">
+                        <div class="game-type-display">
+                            <span id="dots_gameTypeLabel">Normal</span> - <span id="dots_difficultyLabel">Medium</span>
+                        </div>
+                        <p id="dots_turnInfo" class="turn-info-modern">Your Turn</p>
+                        <div id="dots_feedbackMessage" class="feedback-message" style="display: none;"></div>
+                        
+                        <div class="dots-score-display" style="display: flex; justify-content: center; gap: 30px; margin-top: 10px;">
+                            <div class="score-card player1-score" id="dotsPlayer1ScoreCard" style="background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 12px; border: 2px solid #2196F3;">
+                                <div style="font-size: 11px; opacity: 0.8;" id="dotsPlayer1Name">Player 1</div>
+                                <div style="font-size: 20px; font-weight: bold;" id="dotsPlayer1Score">0</div>
+                            </div>
+                            <div class="score-card player2-score" id="dotsPlayer2ScoreCard" style="background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 12px; border: 2px solid #F44336;">
+                                <div style="font-size: 11px; opacity: 0.8;" id="dotsPlayer2Name">Player 2</div>
+                                <div style="font-size: 20px; font-weight: bold;" id="dotsPlayer2Score">0</div>
+                            </div>
+                        </div>
+
+                        <div class="timer-display" id="dots_timerDisplay" style="display: none; margin-top: 10px;">
+                            <div class="timer-info">
+                                <i class="fas fa-clock"></i>
+                                <span id="dots_timerLabel" style="font-size:11px; opacity:0.75; margin-right:4px;"></span>
+                                <span id="dots_turnTimer" class="timer-value">20</span>
+                                <span>s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-board-wrapper dots-wrapper">
+                    <!-- Zoom/Pan controls hint for Large Size mode -->
+                    <div id="dots_cameraHint" style="display: none; text-align: center; color: rgba(255,255,255,0.7); font-size: 11px; margin-bottom: 8px;">
+                        <i class="fas fa-search-plus"></i> Use scroll/pinch to Zoom, drag canvas to Pan. Double tap/click to reset.
+                    </div>
+                    <div class="board-container dots-container" id="dotsBoardContainer" style="overflow: hidden; position: relative; border-radius: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.6);">
+                        <canvas id="dotsCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="bottom-action-container" id="dots_bottomActionContainer">
+                    <button class="action-button" id="dots_gameBackButton" onclick="backToDotsTypeScreen()" style="flex:1; min-width:0;">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="action-button" id="dots_newGameButton" onclick="resetDotsGame()" style="flex:1; min-width:0;">
+                        <i class="fas fa-redo"></i> Play Again
+                    </button>
+                    <button class="action-button" id="dots_leaveGameButton" style="display: none; flex:1; min-width:0;" onclick="leaveDotsMultiplayerGame()">
+                        <i class="fas fa-sign-out-alt"></i> Leave Game
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals and multiplayer screens -->
+        <div id="dots_gameOverModal" class="modal">
+            <div class="modal-content">
+                <h2 id="dots_gameOverTitle">Game Over</h2>
+                <p id="dots_gameOverMessage"></p>
+                <div class="modal-buttons">
+                    <button class="modal-button" onclick="newDotsGame()">Play Again</button>
+                    <button class="modal-button secondary" onclick="exitToDotsHome()">Exit</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dots_multiplayerModeScreen" class="dots-game-screen">
+            <div class="game-background" id="dots_multiplayerModeBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes Icon" class="game-icon">
+                    <h1 data-translate="dots_online_multiplayer">Online Multiplayer</h1>
+                    <p data-translate="dots_online_desc">Play against other players online</p>
+                </div>
+
+                <div class="mode-selection">
+                    <button class="dots-mode-button" onclick="showDotsRoomActionScreen('create')">
+                        <i class="fas fa-door-open"></i>
+                        <span data-translate="dots_create_room">Create Room</span>
+                    </button>
+                    <button class="dots-mode-button" onclick="showDotsRoomActionScreen('join')">
+                        <i class="fas fa-users"></i>
+                        <span data-translate="dots_join_room">Join Room</span>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToDotsModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dots_roomActionScreen" class="dots-game-screen">
+            <div class="game-background" id="dots_roomActionBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes Icon" class="game-icon">
+                    <h1 id="dots_roomActionTitle">Room Action</h1>
+                    <p id="dots_roomActionSubtitle">Select grid type</p>
+                </div>
+
+                <div class="type-selection" id="dots_roomActionTypeSelection">
+                    <button class="dots-type-button" data-type="normal" onclick="handleDotsRoomAction('normal')">
+                        <i class="fas fa-th-large"></i>
+                        <h3 data-translate="dots_type_normal_title">Normal Size Grid</h3>
+                        <p data-translate="dots_type_normal_desc">Standard 6x6 dots grid</p>
+                    </button>
+                    <button class="dots-type-button" data-type="large" onclick="handleDotsRoomAction('large')">
+                        <i class="fas fa-th"></i>
+                        <h3 data-translate="dots_type_large_title">Large Size Grid</h3>
+                        <p data-translate="dots_type_large_desc">Expansive 20x20 dots grid</p>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToDotsMultiplayerModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dots_roomListScreen" class="dots-game-screen">
+            <div class="game-background" id="dots_roomListBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes Icon" class="game-icon">
+                    <h1 data-translate="dots_available_rooms">Available Rooms</h1>
+                    <p data-translate="dots_select_room">Select a room to join</p>
+                </div>
+
+                <div class="rooms-container">
+                    <div id="dots_roomsList" class="rooms-list">
+                        <p class="loading-text" data-translate="dots_loading_rooms">Loading rooms...</p>
+                    </div>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToDotsMultiplayerModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dots_waitingScreen" class="dots-game-screen">
+            <div class="game-background" id="dots_waitingBackground"></div>
+            <div class="type-container waiting-container">
+                <div class="game-header">
+                    <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes Icon" class="game-icon">
+                    <h1 data-translate="dots_waiting_opponent">Waiting for Opponent</h1>
+                    <p><span data-translate="dots_room_id">Room ID: </span><span id="dots_roomIdDisplay" class="room-id-text">-</span></p>
+                </div>
+
+                <div class="waiting-info">
+                    <div class="spinner"></div>
+                    <p id="dots_waitingStatus" data-translate="dots_waiting_desc">Waiting for opponent to join...</p>
+                    <p class="player-color" id="dots_playerColorDisplay"><span data-translate="dots_you_are">You are </span><span id="dots_playerColorSpan"></span></p>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="cancelDotsWaiting()" data-translate="dots_cancel_room">
+                        <i class="fas fa-times-circle"></i> Cancel Room
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dots_customizationScreen" class="dots-game-screen">
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="games/dots-and-boxes/assets/images/icon.png" alt="Dots & Boxes Icon" class="game-icon">
+                    <h1 data-translate="dots_customization">Customization</h1>
+                    <p data-translate="dots_customization_desc">Customize your game experience</p>
+                </div>
+
+                <div class="customization-content" style="padding: 40px; text-align: center;">
+                    <p style="font-size: 18px; color: #666;" data-translate="dots_custom_soon">Customization options coming soon...</p>
+                    <div style="margin-top:20px;">
+                        <label for="dots_opponentUsernameInput" style="display:block; margin-bottom:8px;" data-translate="dots_opp_username">Opponent username (optional):</label>
+                        <input id="dots_opponentUsernameInput" type="text" placeholder="e.g. friend123" style="padding:8px; width:220px; border-radius:4px; border:1px solid #ccc;">
+                        <p style="font-size:12px; color:#999; margin-top:8px;" data-translate="dots_save_results_note">Set this if you want results saved to a specific player's profile.</p>
+                    </div>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToDotsModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Match & splash screens -->
+        <div id="dots_onlineMatchStartSplashScreen" class="dots-game-screen">
+            <div class="splash-container">
+                <div class="splash-content" style="text-align: center;">
+                    <h2 style="font-size: 32px; margin-bottom: 30px; color: #4CAF50;" data-translate="dots_match_ready">⚔️ Match Ready! ⚔️</h2>
+                    <div id="dots_onlineMatchPlayersInfo" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;"></div>
+                    <div style="font-size: 24px; font-weight: bold; color: #FFD700; margin-bottom: 20px;">
+                        <span data-translate="dots_starts_in">Game starts in: </span><span id="dots_onlineMatchCountdown">5</span>s
+                    </div>
+                    <p style="font-size: 14px; color: #ccc;" data-translate="dots_good_luck">Good luck! 🍀</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="dots_gameStartSplashScreen" class="dots-game-screen">
+            <div class="splash-container">
+                <div class="splash-content" style="text-align: center;">
+                    <h2 style="font-size: 32px; margin-bottom: 20px; color: #4CAF50;" data-translate="dots_starting">Game Starting!</h2>
+                    <div class="player-info-splash" style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15);">
+                        <p style="font-size: 18px; margin: 10px 0;"><strong data-translate="dots_role">Your Role:</strong> <span id="dots_splashPlayerRole" style="color: #4CAF50;">-</span></p>
+                        <p style="font-size: 18px; margin: 10px 0;"><strong data-translate="dots_color">Your Color:</strong> <span id="dots_splashPlayerColor" style="color: #2196F3;">-</span></p>
+                        <p style="font-size: 18px; margin: 10px 0;"><strong data-translate="dots_first_player">First Player:</strong> <span id="dots_splashFirstPlayer" style="color: #FF9800;">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dots_opponentLeftSplashScreen" class="dots-game-screen">
+            <div class="splash-container">
+                <div class="splash-content" style="text-align: center; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                    <h2 style="font-size: 32px; margin-bottom: 20px; color: #FF5252;" data-translate="dots_opponent_left">Opponent Left</h2>
+                    <p style="font-size: 18px; margin-bottom: 30px;" data-translate="dots_opponent_left_desc">Your opponent has left the game.</p>
+                    <button onclick="leaveDotsMultiplayerGame()" class="dots-menu-button" style="padding:12px 30px; font-size:16px;">
+                        <i class="fas fa-arrow-left"></i> <span data-translate="dots_exit">Leave Game</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dots_winnerSplashScreen" class="dots-game-screen">
+            <div class="splash-container">
+                <div class="splash-content" style="text-align: center;">
+                    <h2 id="dots_winnerSplashTitle" style="font-size: 32px; margin-bottom: 20px; color: #4CAF50;" data-translate="dots_you_win">You Won! 🎉</h2>
+                    <p id="dots_winnerSplashMessage" style="font-size: 18px; margin-bottom: 30px;" data-translate="dots_congrats">Congratulations!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Navigation (Dock) for Dots and Boxes -->
+        <div class="footer-nav">
+            <div class="nav-item" onclick="showSection('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label" data-translate="nav_profile">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label" data-translate="nav_friends">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label" data-translate="nav_leaderboards">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label" data-translate="nav_store">Store</span>
+            </div>
+            <div class="nav-item" data-action="home" onclick="showSection('home')">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-label" data-translate="nav_home">Home</span>
+            </div>
+        </div>
+    </div>
+
     <div id="storeSection" class="section store-section hidden">
         <div class="game-background" style="background-image: var(--bg-desktop);"></div>
         <div class="store-shell">
@@ -1029,6 +1428,10 @@
                     <i class="fas fa-chess"></i>
                     <span>Dama</span>
                 </button>
+                <button class="section-btn" onclick="switchSection('dots_and_boxes', this)">
+                    <i class="fas fa-th"></i>
+                    <span data-translate="store_section_dots_and_boxes">Dots and Boxes</span>
+                </button>
                 <button class="section-btn" onclick="switchSection('coming', this)">
                     <i class="fas fa-star"></i>
                     <span>Coming Soon</span>
@@ -1047,6 +1450,29 @@
             <div class="store-items-container">
                 <div class="items-grid" id="storeItemsGrid">
                     <!-- Items will be dynamically added here -->
+                </div>
+                <!-- Store Legend (explains color meanings) - inside scroll area so it appears under cards -->
+                <div class="store-legend" role="contentinfo" aria-label="Store legend">
+                    <div class="legend-inner">
+                        <h3 data-translate="store_legend_title">Item Types</h3>
+                        <div class="legend-items">
+                            <div class="legend-item legend-free">
+                                <div class="legend-text">
+                                    <div class="legend-label" data-translate="store_legend_free_label">Free</div>
+                                </div>
+                            </div>
+                            <div class="legend-item legend-coins">
+                                <div class="legend-text">
+                                    <div class="legend-label" data-translate="store_legend_coins_label">Coin Purchase</div>
+                                </div>
+                            </div>
+                            <div class="legend-item legend-diamonds">
+                                <div class="legend-text">
+                                    <div class="legend-label" data-translate="store_legend_diamonds_label">Diamond Purchase</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1201,6 +1627,8 @@
                                 <div class="game-tabs" id="gameTabs">
                                     <button class="game-tab active" data-game="dama"
                                         data-translate="games_dama_title">Dama</button>
+                                    <button class="game-tab" data-game="dots_and_boxes"
+                                        data-translate="games_dots_and_boxes_title">Dots and Boxes</button>
                                 </div>
                             </div>
                             <div class="stats-grid" id="statsGrid"></div>
@@ -1319,26 +1747,113 @@
         <div class="game-background" style="background-image: var(--bg-desktop);"></div>
         <div class="games-shell">
             <header class="games-header">
-                <button class="back-button" onclick="showSection('home')">
+                <button class="back-button" onclick="showSection('home')" data-translate="games_back">
                     <i class="fas fa-arrow-left"></i>
                     Back
                 </button>
                 <div class="header-title">
-                    <h1>Events</h1>
-                    <p>Exciting events and tournaments coming soon!</p>
+                    <h1 data-translate="events_page_title">Events</h1>
+                    <p data-translate="events_page_subtitle">Earn daily rewards and complete challenges!</p>
                 </div>
             </header>
-            <section class="events-container"
-                style="padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; color: white;">
-                <div
-                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 40px 20px; text-align: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-width: 500px; width: 100%;">
-                    <i class="fas fa-calendar-alt" style="font-size: 4rem; color: #ffd700; margin-bottom: 20px;"></i>
-                    <h2>Tournaments & Events</h2>
-                    <p style="color: #ccc; margin-top: 15px; font-size: 1.1rem; line-height: 1.6;">Stay tuned! We are
-                        preparing special events, live tournaments, and exclusive challenges where you can compete and
-                        win rewards.</p>
+
+            <!-- Authentication Guard State -->
+            <div id="eventsAuthGuard" class="events-auth-guard hidden">
+                <div class="auth-guard-panel">
+                    <i class="fas fa-lock guard-icon"></i>
+                    <h2 data-translate="events_login_required_title">Login Required</h2>
+                    <p data-translate="events_login_required_desc">Please login or register to access the Event System and claim your rewards!</p>
+                    <button class="btn btn-primary login-redirect-btn" onclick="showSection('profile')" data-translate="events_login_btn">Go to Login / Register</button>
                 </div>
-            </section>
+                
+                <!-- Logged out preview container showing floating rewards with cool animations -->
+                <div class="rewards-preview-container">
+                    <h3 data-translate="events_preview_title">Login or Register now to claim these exclusive rewards:</h3>
+                    <div class="preview-rewards-grid">
+                        <div class="preview-reward-card float-anim-1">
+                            <div class="reward-icon-badge coins-badge">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <span class="preview-reward-name">3,000+ Coins</span>
+                        </div>
+                        <div class="preview-reward-card float-anim-2">
+                            <div class="reward-icon-badge diamonds-badge">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <span class="preview-reward-name">20+ Diamonds</span>
+                        </div>
+                        <div class="preview-reward-card float-anim-3">
+                            <div class="reward-icon-badge chest-badge">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <span class="preview-reward-name">Legendary Chests</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Events Container (Visible only when logged in) -->
+            <div id="eventsActiveContent" class="events-active-content hidden">
+                <div class="events-main-layout">
+                    <!-- Left Column: Tab switcher -->
+                    <aside class="events-sidebar">
+                        <button class="events-tab-btn active" data-event-tab="dailyLogin">
+                            <i class="fas fa-calendar-check"></i>
+                            <span data-translate="events_tab_daily_login">Daily Login</span>
+                            <span id="dailyLoginTabBadge" class="tab-badge hidden"></span>
+                        </button>
+                        <button class="events-tab-btn" data-event-tab="dailyChallenge">
+                            <i class="fas fa-tasks"></i>
+                            <span data-translate="events_tab_daily_challenge">Daily Challenges</span>
+                            <span id="dailyChallengeTabBadge" class="tab-badge hidden"></span>
+                        </button>
+                    </aside>
+
+                    <!-- Right Column: Selected section contents -->
+                    <main class="events-content-area">
+                        <!-- Daily Login Section -->
+                        <div id="dailyLoginSection" class="event-tab-content active">
+                            <h2 data-translate="events_daily_login_title">7-Day Reward Streak</h2>
+                            <p class="section-desc" data-translate="events_daily_login_desc">Claim free coins and diamonds every day! Complete Day 7 to unlock the Legendary Chest!</p>
+                            
+                            <div class="daily-login-grid" id="dailyLoginGrid">
+                                <!-- Dynamically populated days 1 to 7 -->
+                            </div>
+                        </div>
+
+                        <!-- Daily Challenge Section -->
+                        <div id="dailyChallengeSection" class="event-tab-content">
+                            <!-- Dama Challenge -->
+                            <div class="daily-challenge-game-header">
+                                <span class="game-label-badge dama-badge" data-translate="games_dama_badge"><i class="fas fa-chess"></i> Dama</span>
+                            </div>
+                            <h2 data-translate="events_daily_challenge_title">Dama Daily Challenge</h2>
+                            <p class="section-desc" data-translate="events_daily_challenge_desc">Complete today's challenge in Dama to earn premium rewards!</p>
+                            <div id="dailyChallengeCard" class="daily-challenge-card">
+                                <!-- Dynamically populated challenge -->
+                            </div>
+
+                            <!-- Dots & Boxes Challenge -->
+                            <div class="daily-challenge-game-header" style="margin-top: 28px;">
+                                <span class="game-label-badge dots-badge" data-translate="games_dots_and_boxes_badge"><i class="fas fa-th"></i> Dots &amp; Boxes</span>
+                            </div>
+                            <h2 data-translate="events_dots_challenge_title">Dots &amp; Boxes Daily Challenge</h2>
+                            <p class="section-desc" data-translate="events_dots_challenge_desc">Complete today's Dots &amp; Boxes challenge to earn extra rewards!</p>
+                            <div id="dotsDailyChallengeCard" class="daily-challenge-card">
+                                <!-- Dynamically populated dots challenge -->
+                            </div>
+                        </div>
+                    </main>
+                </div>
+
+            </div>
+            
+            <!-- Upcoming Tournaments Placeholder (At the end) -->
+            <div class="upcoming-events-container">
+                <i class="fas fa-calendar-alt upcoming-icon"></i>
+                <h3 data-translate="events_upcoming_title">Tournaments & Events</h3>
+                <p data-translate="events_upcoming_desc">Stay tuned! We are preparing special events, live tournaments, and exclusive challenges where you can compete and win rewards.</p>
+            </div>
         </div>
         <div class="footer-nav">
             <div class="nav-item" onclick="handleNavAction('profile')">
@@ -1373,10 +1888,13 @@
     <script src="js/playerData.js"></script>
     <script src="js/store.js"></script>
     <script src="js/profile.js"></script>
+    <script src="js/events.js"></script>
     <script src="js/social.js"></script>
     <script src="js/hub_multiplayer.js"></script>
     <script src="games/dama/js/multiplayer.js"></script>
     <script src="games/dama/js/dama.js"></script>
+    <script src="games/dots-and-boxes/js/multiplayer.js"></script>
+    <script src="games/dots-and-boxes/js/dots-and-boxes.js"></script>
 
     <!-- Notifications Modal -->
     <div id="notificationsModal" class="global-modal hidden">
@@ -1405,6 +1923,36 @@
         </button>
         <img id="viewerImage" src="" alt="Preview">
         <div id="viewerTitle" style="color: white; margin-top: 1rem; font-size: 0.9rem;"></div>
+    </div>
+    <!-- Treasure Chest Modal -->
+    <div id="treasureChestModal" class="global-modal hidden">
+        <div class="global-modal-overlay" onclick="closeTreasureChestModal()"></div>
+        <div class="global-modal-content chest-modal-content">
+            <button class="modal-close-btn" onclick="closeTreasureChestModal()"><i class="fas fa-times"></i></button>
+            <div class="chest-animation-container">
+                <div class="chest-glow"></div>
+                <div class="chest-box-wrapper" id="chestBoxWrapper">
+                    <i class="fas fa-gift chest-icon-animated" id="chestBoxIcon"></i>
+                </div>
+                <h2 id="chestModalTitle" data-translate="chest_modal_title">Opening Treasure Chest...</h2>
+            </div>
+            
+            <!-- Random Picker Roller -->
+            <div class="picker-roller-container" id="pickerRollerContainer">
+                <div class="picker-roller-track" id="pickerRollerTrack">
+                    <!-- Dynamic rolling items -->
+                </div>
+                <div class="picker-pointer"></div>
+            </div>
+            
+            <!-- Result Display -->
+            <div class="chest-result-display hidden" id="chestResultDisplay">
+                <div class="won-prize-card" id="wonPrizeCard">
+                    <!-- Won item details -->
+                </div>
+                <button class="btn btn-primary claim-chest-btn" id="claimChestPrizeBtn" onclick="claimChestReward()" data-translate="chest_claim_btn">Claim Reward</button>
+            </div>
+        </div>
     </div>
 </body>
 

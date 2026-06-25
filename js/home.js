@@ -96,8 +96,8 @@ function showSection(sectionId, fromBack = false) {
     }
 
     let target = document.getElementById(`${sectionId}Section`);
-    if (!target && sectionId === 'dama') {
-        target = document.getElementById('dama');
+    if (!target && (sectionId === 'dama' || sectionId === 'dots_and_boxes')) {
+        target = document.getElementById(sectionId);
     }
     if (target) {
         target.classList.remove('hidden');
@@ -125,6 +125,14 @@ function showSection(sectionId, fromBack = false) {
             if (modeScreen) {
                 modeScreen.classList.add('active');
             }
+        }
+    } else if (sectionId === 'dots_and_boxes') {
+        try {
+            if (typeof window.openDotsSection === 'function') {
+                window.openDotsSection();
+            }
+        } catch (err) {
+            console.error('Dots and Boxes screen initialization failed:', err);
         }
     }
 
@@ -1025,4 +1033,46 @@ window.initializeNotifications = initializeNotifications;
 window.openNotificationsModal = openNotificationsModal;
 window.closeNotificationsModal = closeNotificationsModal;
 window.markAllNotificationsAsRead = markAllNotificationsAsRead;
+
+// --- Game Info Modal Registry ---
+window.aboutGameRegistry = window.aboutGameRegistry || {};
+
+function registerAboutGame(id, data) {
+    if (!id) return;
+    window.aboutGameRegistry[id] = Object.assign({}, window.aboutGameRegistry[id] || {}, data || {});
+}
+
+function showGameModal(id) {
+    const modal = document.getElementById('gameInfoModal');
+    if (!modal) return;
+    const info = window.aboutGameRegistry[id] || {};
+    const titleEl = document.getElementById('gameInfoTitle');
+    const contentEl = document.getElementById('gameInfoContent');
+    const iconEl = document.getElementById('gameInfoIcon');
+
+    const titleText = info.titleKey ? window.getTranslation(info.titleKey, info.title) : (info.title || '');
+    const descText = info.descKey ? window.getTranslation(info.descKey, info.desc) : (info.desc || '');
+
+    if (titleEl) titleEl.textContent = titleText;
+    if (contentEl) contentEl.innerHTML = descText;
+    if (iconEl) iconEl.src = info.image || '';
+
+    modal.classList.remove('hidden');
+    // focus close button for accessibility
+    setTimeout(() => modal.querySelector('.modal-close-btn')?.focus(), 160);
+}
+
+function closeGameModal() {
+    const modal = document.getElementById('gameInfoModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+}
+
+// Register default games
+registerAboutGame('dama', { titleKey: 'games_dama_title', descKey: 'about_dama_desc', image: 'games/dama/assets/images/icon.png' });
+registerAboutGame('dots_and_boxes', { titleKey: 'games_dots_and_boxes_title', descKey: 'about_dots_desc', image: 'games/dots-and-boxes/assets/images/icon.png' });
+
+window.registerAboutGame = registerAboutGame;
+window.showGameModal = showGameModal;
+window.closeGameModal = closeGameModal;
 

@@ -36,6 +36,11 @@ const sectionStructure = {
         icon: 'fas fa-chess',
         categories: ['board', 'piece']
     },
+    dots_and_boxes: {
+        name: 'Dots & Boxes',
+        icon: 'fas fa-th',
+        categories: ['lines', 'boxes', 'boards']
+    },
     coming: {
         name: 'Coming Soon',
         icon: 'fas fa-star',
@@ -164,7 +169,8 @@ const storeItems = {
             category: 'global',
             color: 'purple',
             defaultOwned: false,
-            itemType: 'avatar'
+            itemType: 'avatar',
+            isLegendary: true
         },
         {
             id: 'global_song_jalsa',
@@ -281,7 +287,8 @@ const storeItems = {
             color: 'gold',
             itemType: 'currency',
             rewardCurrency: 'diamonds',
-            rewardAmount: 25
+            rewardAmount: 25,
+            isLegendary: true
         }
     ],
     dama: [
@@ -343,7 +350,8 @@ const storeItems = {
             category: 'dama',
             color: 'purple',
             defaultOwned: false,
-            itemType: 'board'
+            itemType: 'board',
+            isLegendary: true
         },
         {
             id: 'dama_piece_default',
@@ -403,7 +411,202 @@ const storeItems = {
             category: 'dama',
             color: 'purple',
             defaultOwned: false,
-            itemType: 'piece'
+            itemType: 'piece',
+            isLegendary: true
+        }
+    ],
+    dots_and_boxes: [
+        {
+            id: 'dots_lines_default',
+            name: 'Black and Brown Lines',
+            description: 'Classic black and brown lines for Dots and Boxes.',
+            image: 'games/dots-and-boxes/assets/images/line-default.png',
+            price: 0,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'gray',
+            defaultOwned: true,
+            itemType: 'lines'
+        },
+        {
+            id: 'dots_lines_blue_red',
+            name: 'Light Blue and Red Lines',
+            description: 'Bright light blue and red lines for Dots and Boxes.',
+            image: 'games/dots-and-boxes/assets/images/line-blue-red.png',
+            price: 250,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'blue',
+            defaultOwned: false,
+            itemType: 'lines'
+        },
+        {
+            id: 'dots_boxes_default',
+            name: 'Light Black and Brown Boxes',
+            description: 'Light black and brown colored boxes.',
+            image: 'games/dots-and-boxes/assets/images/box-default.png',
+            price: 0,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'gray',
+            defaultOwned: true,
+            itemType: 'boxes'
+        },
+        {
+            id: 'dots_boxes_blue_red',
+            name: 'Light Blue and Red Boxes',
+            description: 'Light blue and red colored boxes.',
+            image: 'games/dots-and-boxes/assets/images/box-blue-red.png',
+            price: 250,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'blue',
+            defaultOwned: false,
+            itemType: 'boxes'
+        },
+        {
+            id: 'dots_board_white',
+            name: 'White Board',
+            description: 'Clean white game board.',
+            image: 'games/dots-and-boxes/assets/images/board-white.png',
+            price: 0,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'white',
+            defaultOwned: true,
+            itemType: 'boards'
+        },
+        {
+            id: 'dots_board_black',
+            name: 'Black Board',
+            description: 'Dark black game board.',
+            image: 'games/dots-and-boxes/assets/images/board-black.png',
+            price: 250,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'black',
+            defaultOwned: false,
+            itemType: 'boards'
+        },
+        // ===== SET 1: GOLDEN SAND (750 Gold) =====
+        {
+            id: 'dots_lines_golden_sand',
+            name: 'Golden Sand Lines',
+            description: 'Warm golden sand-colored lines for a desert aesthetic.',
+            image: 'games/dots-and-boxes/assets/images/line-golden-sand.png',
+            price: 750,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'gold',
+            defaultOwned: false,
+            itemType: 'lines'
+        },
+        {
+            id: 'dots_boxes_golden_sand',
+            name: 'Golden Sand Boxes',
+            description: 'Warm golden sand-colored boxes matching the desert theme.',
+            image: 'games/dots-and-boxes/assets/images/box-golden-sand.png',
+            price: 750,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'gold',
+            defaultOwned: false,
+            itemType: 'boxes'
+        },
+        {
+            id: 'dots_board_sandy',
+            name: 'Golden Board',
+            description: 'A shiny golden gradient board inspired by desert treasure.',
+            image: 'games/dots-and-boxes/assets/images/board-sandy.png',
+            price: 750,
+            currency: 'coins',
+            category: 'dots_and_boxes',
+            color: 'gold',
+            defaultOwned: false,
+            itemType: 'boards'
+        },
+        // ===== SET 2: CRYSTAL FROST (75 Diamonds) =====
+        {
+            id: 'dots_lines_crystal_frost',
+            name: 'Crystal Frost Lines',
+            description: 'Icy blue crystal-themed lines with a frozen appearance.',
+            image: 'games/dots-and-boxes/assets/images/line-crystal-frost.png',
+            price: 75,
+            currency: 'diamonds',
+            category: 'dots_and_boxes',
+            color: 'cyan',
+            defaultOwned: false,
+            itemType: 'lines'
+        },
+        {
+            id: 'dots_boxes_crystal_frost',
+            name: 'Crystal Frost Boxes',
+            description: 'Icy blue crystal-themed boxes with a frozen glow.',
+            image: 'games/dots-and-boxes/assets/images/box-crystal-frost.png',
+            price: 75,
+            currency: 'diamonds',
+            category: 'dots_and_boxes',
+            color: 'cyan',
+            defaultOwned: false,
+            itemType: 'boxes'
+        },
+        {
+            id: 'dots_board_frosted',
+            name: 'Frosted Board',
+            description: 'A beautiful frosted glass-like game board.',
+            image: 'games/dots-and-boxes/assets/images/board-frosted.png',
+            price: 75,
+            currency: 'diamonds',
+            category: 'dots_and_boxes',
+            color: 'cyan',
+            defaultOwned: false,
+            itemType: 'boards'
+        },
+        // ===== SET 3: NEON PULSE (150 Diamonds) - LEGENDARY WITH ANIMATIONS =====
+        {
+            id: 'dots_lines_neon_pulse',
+            name: 'Neon Pulse Lines',
+            description: 'Legendary glowing neon lines with pulsing animations.',
+            image: 'games/dots-and-boxes/assets/images/line-neon-pulse.gif',
+            price: 150,
+            currency: 'diamonds',
+            category: 'dots_and_boxes',
+            color: 'violet',
+            defaultOwned: false,
+            itemType: 'lines',
+            isLegendary: true,
+            hasAnimation: true,
+            animationType: 'pulse'
+        },
+        {
+            id: 'dots_boxes_neon_pulse',
+            name: 'Neon Pulse Boxes',
+            description: 'Legendary glowing neon boxes with mesmerizing pulsing effects.',
+            image: 'games/dots-and-boxes/assets/images/box-neon-pulse.gif',
+            price: 150,
+            currency: 'diamonds',
+            category: 'dots_and_boxes',
+            color: 'violet',
+            defaultOwned: false,
+            itemType: 'boxes',
+            isLegendary: true,
+            hasAnimation: true,
+            animationType: 'pulse'
+        },
+        {
+            id: 'dots_board_neon_pulse',
+            name: 'Neon Pulse Board',
+            description: 'Legendary board with neon glow and animated pulse effects.',
+            image: 'games/dots-and-boxes/assets/images/board-neon-pulse.gif',
+            price: 150,
+            currency: 'diamonds',
+            category: 'dots_and_boxes',
+            color: 'violet',
+            defaultOwned: false,
+            itemType: 'boards',
+            isLegendary: true,
+            hasAnimation: true,
+            animationType: 'pulse'
         }
     ]
 };
@@ -474,7 +677,10 @@ function getCategoryIcon(category) {
         'piece': 'fas fa-circle',
         'music': 'fas fa-music',
         'songs': 'fas fa-music',
-        'currency': 'fas fa-coins'
+        'currency': 'fas fa-coins',
+        'lines': 'fas fa-grip-lines',
+        'boxes': 'fas fa-th',
+        'boards': 'fas fa-chess-board'
     };
     return icons[category] || 'fas fa-box';
 }
@@ -521,6 +727,14 @@ function loadPlayerData() {
                         data.inventory[item.id] = true;
                         const itemType = item.itemType || 'theme';
                         const selectionKey = (itemType === 'theme' || itemType === 'background') ? `global_${itemType}` : `dama_${itemType}`;
+                        if (!data.selectedItems[selectionKey]) data.selectedItems[selectionKey] = item.id;
+                    }
+                });
+                storeItems.dots_and_boxes.forEach(item => {
+                    if (item.defaultOwned) {
+                        data.inventory[item.id] = true;
+                        const itemType = item.itemType || 'theme';
+                        const selectionKey = `dots_and_boxes_${itemType}`;
                         if (!data.selectedItems[selectionKey]) data.selectedItems[selectionKey] = item.id;
                     }
                 });
@@ -585,6 +799,9 @@ function renderStoreItems() {
 function createItemCard(item) {
     const card = document.createElement('div');
     card.className = 'item-card';
+    if (item.isLegendary) {
+        card.className += ' legendary-item';
+    }
     card.id = `item-${item.id}`;
 
     // Determine dynamic color based on requirements:
@@ -601,6 +818,9 @@ function createItemCard(item) {
         cardColor = 'gold';
     } else if (item.currency === 'diamonds') {
         cardColor = 'purple';
+    }
+    if (item.isLegendary) {
+        cardColor = 'violet';
     }
     card.setAttribute('data-color', cardColor);
 
@@ -619,8 +839,13 @@ function createItemCard(item) {
     const displayImage = (item.isDualImage && item.mobileImage && isMobile) ? item.mobileImage : item.image;
 
     const nameTranslated = window.getTranslation(item.id + '_name', item.name);
+    const legendaryBadge = item.isLegendary ? `<div class="legendary-badge"><i class="fas fa-crown"></i> ${window.getTranslation('store_legendary', 'LEGENDARY')}</div>` : '';
+    const animationClass = item.hasAnimation ? `animate-${item.animationType}` : '';
+    
     card.innerHTML = `
-        <div class="item-image" style="background-image: url('${displayImage}');" data-desktop-image="${item.image}" data-mobile-image="${item.mobileImage || item.image}" onclick="openImageViewer('${displayImage}', '${nameTranslated}')"></div>
+        <div class="item-image ${animationClass}" style="background-image: url('${displayImage}');" data-desktop-image="${item.image}" data-mobile-image="${item.mobileImage || item.image}" onclick="openImageViewer('${displayImage}', '${nameTranslated}')">
+            ${legendaryBadge}
+        </div>
         <div class="item-info">
             <h3>${nameTranslated}</h3>
             ${item.price > 0 ? `

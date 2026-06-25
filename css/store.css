@@ -238,6 +238,83 @@
     transform: translateY(-2px);
 }
 
+/* =====================================================
+   STORE LEGEND (Color key explaining item types)
+   ===================================================== */
+.store-legend {
+    width: 100%;
+    max-width: 1200px;
+    margin: 18px auto;
+    padding: 14px;
+    background: rgba(15, 28, 56, 0.28);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+
+.store-legend h3 {
+    margin: 0 0 6px 0;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.legend-inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-items {
+    display: flex;
+    gap: 14px;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: #ffffff;
+    min-width: 160px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.06);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* hide the small swatch square now that the whole container is colored */
+.legend-swatch { display: none; }
+
+.legend-item.legend-free { background: linear-gradient(135deg, rgba(16,185,129,0.65), rgba(52,211,153,0.55)); color: #ffffff; }
+.legend-item.legend-coins { background: linear-gradient(135deg, rgba(255,200,100,0.65), rgba(255,174,0,0.55)); color: #ffffff; }
+.legend-item.legend-diamonds { background: linear-gradient(135deg, rgba(167,139,250,0.65), rgba(124,58,237,0.55)); color: #ffffff; }
+
+.legend-label { color: inherit; font-weight: 800; font-size: 0.95rem; }
+
+@media (max-width: 768px) {
+    .legend-item { min-width: 140px; padding: 10px 12px; }
+}
+
+@media (max-width: 768px) {
+    .store-legend { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .legend-items { flex-wrap: wrap; }
+}
+
 .category-btn.active {
     background: linear-gradient(135deg, rgba(100, 150, 255, 0.8), rgba(150, 200, 255, 0.6));
     color: #ffffff;
@@ -263,7 +340,7 @@
     max-width: 100%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 1.2rem 1rem 5.5rem 1rem;
+    padding: 1.2rem 1rem 6rem 1rem;
     overflow-x: hidden;
     box-sizing: border-box;
 }
@@ -376,6 +453,72 @@
 .item-card[data-color="yellow"] {
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.65), rgba(255, 200, 0, 0.55));
     border-color: rgba(255, 215, 0, 0.8);
+}
+
+.item-card[data-color="violet"] {
+    background: linear-gradient(135deg, rgba(200, 100, 255, 0.75), rgba(180, 80, 255, 0.65));
+    border-color: rgba(200, 100, 255, 1);
+}
+
+.item-card[data-color="cyan"] {
+    background: linear-gradient(135deg, rgba(100, 220, 255, 0.65), rgba(80, 200, 255, 0.55));
+    border-color: rgba(100, 220, 255, 0.8);
+}
+
+/* Legendary Items Styling */
+.legendary-item {
+    box-shadow: 0 0 20px rgba(200, 100, 255, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    border: 2px solid rgba(200, 100, 255, 1) !important;
+}
+
+.legendary-item:hover {
+    box-shadow: 0 0 30px rgba(200, 100, 255, 0.8), 0 12px 32px rgba(0, 0, 0, 0.6) !important;
+    animation: legendary-glow 0.5s ease-in-out infinite;
+}
+
+@keyframes legendary-glow {
+    0%, 100% {
+        box-shadow: 0 0 30px rgba(200, 100, 255, 0.8), 0 12px 32px rgba(0, 0, 0, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(200, 100, 255, 1), 0 12px 32px rgba(0, 0, 0, 0.6);
+    }
+}
+
+/* Legendary Badge */
+.legendary-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 180, 0, 0.95));
+    color: #1a1a1a;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+    z-index: 20;
+    box-shadow: 0 4px 8px rgba(200, 100, 255, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.legendary-badge i {
+    font-size: 14px;
+}
+
+/* Animation Styles for Legendary Items */
+.animate-pulse {
+    animation: item-pulse 2s ease-in-out infinite !important;
+}
+
+@keyframes item-pulse {
+    0%, 100% {
+        filter: brightness(1) drop-shadow(0 0 8px rgba(200, 100, 255, 0.4));
+    }
+    50% {
+        filter: brightness(1.15) drop-shadow(0 0 16px rgba(200, 100, 255, 0.8));
+    }
 }
 
 /* =====================================================
@@ -645,7 +788,7 @@
     }
 
     .store-items-container {
-        padding: 0.8rem 0.5rem 6.5rem 0.5rem;
+        padding: 0.8rem 0.5rem 6rem 0.5rem;
     }
 
     .items-grid {
