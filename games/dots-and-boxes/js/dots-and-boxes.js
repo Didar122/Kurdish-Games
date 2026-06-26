@@ -10,7 +10,7 @@
 
     // Expose Dots Game State & Controls globally
     const dots_gameState = {
-        boardSize: 'normal', // 'normal' (6x6 dots) or 'large' (20x20 dots)
+        boardSize: 'normal', // 'normal' (6x6 dots) or 'large' (12x12 dots)
         rows: 6,
         cols: 6,
         hLines: [], // horizontal lines rows x (cols - 1)
@@ -354,7 +354,7 @@
         }
 
         // Meta labels (localize)
-        document.getElementById('dots_gameTypeLabel').textContent = dots_gameState.boardSize === 'normal' ? window.getTranslation('dots_type_label_normal', 'Normal (6x6)') : window.getTranslation('dots_type_label_large', 'Large (20x20)');
+        document.getElementById('dots_gameTypeLabel').textContent = dots_gameState.boardSize === 'normal' ? window.getTranslation('dots_type_label_normal', 'Normal (6x6)') : window.getTranslation('dots_type_label_large', 'Large (12x12)');
         if (dots_gameState.gameMode === 'single-player') {
             document.getElementById('dots_difficultyLabel').textContent = window.getTranslation(`dots_diff_${dots_gameState.aiDifficulty}`, dots_gameState.aiDifficulty.toUpperCase());
         } else if (dots_gameState.gameMode === 'two-player') {
