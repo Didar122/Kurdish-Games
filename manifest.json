@@ -6,7 +6,7 @@
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#1e293b",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "icons": [
     {
       "src": "assets/images/icon.png",

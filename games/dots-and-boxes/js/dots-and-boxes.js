@@ -406,29 +406,30 @@
                     const creatorName = window.dots_multiplayer.lastRoomState.creator;
                     if (creatorName) return creatorName.charAt(0).toUpperCase();
                 }
+                return 'P1';
             }
-            try {
-                const currentUserRaw = localStorage.getItem('currentUser');
-                if (currentUserRaw) {
-                    const user = JSON.parse(currentUserRaw);
-                    if (user && user.username) {
-                        return user.username.charAt(0).toUpperCase();
-                    }
-                }
-            } catch (e) {}
-            return 'P';
+            if (dots_gameState.gameMode === 'two-player') {
+                return 'P1';
+            }
+            if (dots_gameState.gameMode === 'single-player') {
+                return 'P';
+            }
+            return 'P1';
         } else {
             if (dots_gameState.gameMode === 'online') {
                 if (window.dots_multiplayer && window.dots_multiplayer.lastRoomState) {
                     const joinerName = window.dots_multiplayer.lastRoomState.joiner;
                     if (joinerName) return joinerName.charAt(0).toUpperCase();
                 }
-                return 'O';
-            } else if (dots_gameState.gameMode === 'single-player') {
-                return 'A';
-            } else {
-                return 'P';
+                return 'P2';
             }
+            if (dots_gameState.gameMode === 'two-player') {
+                return 'P2';
+            }
+            if (dots_gameState.gameMode === 'single-player') {
+                return 'A';
+            }
+            return 'P2';
         }
     }
 

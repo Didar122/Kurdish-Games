@@ -1442,6 +1442,9 @@ window.translatePage = function (lang) {
     for (const [selector, key] of Object.entries(selectorMappings)) {
         const elements = document.querySelectorAll(selector);
         elements.forEach(el => {
+            if (el.children.length > 0) {
+                return;
+            }
             const translation = window.getTranslation(key);
             if (translation) {
                 let textNodeFound = false;
