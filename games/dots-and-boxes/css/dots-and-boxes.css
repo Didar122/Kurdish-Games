@@ -49,26 +49,35 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 1rem 0 8rem 0;
+    padding: 1rem 0 10rem 0;
     opacity: 0;
     pointer-events: none;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     transition: opacity 0.3s ease;
     z-index: 10;
-    scroll-padding-bottom: 10rem;
+    scroll-padding-bottom: 16rem;
+}
+
+#dots_and_boxes .game-container {
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0));
+}
+
+#dots_and_boxes .bottom-action-container {
+    margin-bottom: 1.5rem;
 }
 
 @media (max-width: 768px) {
     #dots_and_boxes .dots-game-screen {
-        padding-bottom: calc(13rem + env(safe-area-inset-bottom, 0));
+        padding-bottom: calc(18rem + env(safe-area-inset-bottom, 0));
     }
     #dots_and_boxes .game-container {
         margin-bottom: 3rem;
+        padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0));
     }
     #dots_and_boxes .board-container {
-        max-width: min(96vw, calc(100vh - 14rem), 720px);
-        max-height: calc(100vh - 14rem);
+        max-width: min(96vw, calc(100vh - 18rem), 720px);
+        max-height: calc(100vh - 18rem);
     }
 }
 

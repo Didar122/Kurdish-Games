@@ -282,6 +282,11 @@
 
         updateUIElements();
         resetCamera();
+        if (size === 'large') {
+            dots_gameState.zoom.scale = 1.08;
+            dots_gameState.zoom.offsetX = 0;
+            dots_gameState.zoom.offsetY = 0;
+        }
         resizeCanvas();
     }
 
@@ -918,6 +923,7 @@
             // Pan start capture (only in large mode or if zoomed in)
             if ((dots_gameState.boardSize === 'large' || dots_gameState.zoom.scale > 1.0) && activePointers.size === 1) {
                 dots_gameState.zoom.isDragging = true;
+                hasInteractionMoved = false;
                 dots_gameState.zoom.startX = e.clientX - dots_gameState.zoom.offsetX;
                 dots_gameState.zoom.startY = e.clientY - dots_gameState.zoom.offsetY;
                 dragOriginX = e.clientX;
@@ -966,7 +972,8 @@
             // Determine if panning threshold met
             if (dots_gameState.zoom.isDragging && activePointers.size === 1) {
                 const dist = Math.hypot(e.clientX - dragOriginX, e.clientY - dragOriginY);
-                if (dist > 6) {
+                const moveThreshold = e.pointerType === 'touch' ? 14 : 6;
+                if (dist > moveThreshold) {
                     hasInteractionMoved = true;
                     isCameraPanning = true;
                     const size = canvas.width / window.devicePixelRatio;
@@ -974,6 +981,7 @@
                     dots_gameState.zoom.offsetX = Math.max(-maxOffset, Math.min(0, e.clientX - dots_gameState.zoom.startX));
                     dots_gameState.zoom.offsetY = Math.max(-maxOffset, Math.min(0, e.clientY - dots_gameState.zoom.startY));
                     drawBoard();
+                    e.preventDefault();
                 }
             }
         });
@@ -1091,7 +1099,7 @@
         const by = coords.y;
 
         let closest = null;
-        let minDistance = spacing * 0.45; // Max threshold distance
+        let minDistance = spacing * (dots_gameState.boardSize === 'large' ? 0.95 : 0.45); // Max threshold distance
 
         // Check horizontal lines
         for (let r = 0; r < dots_gameState.rows; r++) {

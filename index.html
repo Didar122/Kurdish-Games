@@ -399,7 +399,7 @@
                 <div
                     style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
                     <img id="aboutAppIcon" src="assets/images/icon.png" style="width: 140px; height:140px; object-fit:contain; margin-bottom: 12px; border-radius: 12px;" alt="Logo">
-                    <div id="aboutVersion" style="color:#ccc; font-weight:700; margin-bottom:8px;">v1.1.4</div>
+                    <div id="aboutVersion" style="color:#ccc; font-weight:700; margin-bottom:8px;">v1.1.5</div>
                     <h2>Kurdish Games Hub</h2>
                     <p style="color: #ccc; margin-top: 10px;">A unified platform to play traditional and modern games.
                     </p>
@@ -1167,13 +1167,13 @@
 
                 <div class="bottom-action-container" id="dots_bottomActionContainer">
                     <button class="action-button" id="dots_gameBackButton" onclick="backToDotsTypeScreen()" style="flex:1; min-width:0;">
-                        <i class="fas fa-arrow-left"></i> Back
+                        <i class="fas fa-arrow-left"></i> <span class="btn-text" data-translate="games_back">Back</span>
                     </button>
                     <button class="action-button" id="dots_newGameButton" onclick="resetDotsGame()" style="flex:1; min-width:0;">
-                        <i class="fas fa-redo"></i> Play Again
+                        <i class="fas fa-redo"></i> <span class="btn-text" data-translate="dots_play_again">Play Again</span>
                     </button>
                     <button class="action-button" id="dots_leaveGameButton" style="display: none; flex:1; min-width:0;" onclick="leaveDotsMultiplayerGame()">
-                        <i class="fas fa-sign-out-alt"></i> Leave Game
+                        <i class="fas fa-sign-out-alt"></i> <span class="btn-text" data-translate="dots_leave_game">Leave Game</span>
                     </button>
                 </div>
             </div>
