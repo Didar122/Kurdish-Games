@@ -282,11 +282,6 @@
 
         updateUIElements();
         resetCamera();
-        if (size === 'large') {
-            dots_gameState.zoom.scale = 1.08;
-            dots_gameState.zoom.offsetX = 0;
-            dots_gameState.zoom.offsetY = 0;
-        }
         resizeCanvas();
     }
 
