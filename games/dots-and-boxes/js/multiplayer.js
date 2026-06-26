@@ -527,13 +527,13 @@
             if (gs.currentPlayer === 'player1') {
                 card1.classList.add('active-turn');
                 if (turnInfo) turnInfo.textContent = multiplayer.playerColor === 'player1'
-                    ? window.getTranslation('dots_your_turn', 'Your Turn')
-                    : window.getTranslation('dots_opp_turn', "Opponent's Turn");
+                    ? window.getTranslation('dots_turn_your', 'Your Turn')
+                    : window.getTranslation('dots_turn_opponent', "Opponent's Turn");
             } else {
                 card2.classList.add('active-turn');
                 if (turnInfo) turnInfo.textContent = multiplayer.playerColor === 'player2'
-                    ? window.getTranslation('dots_your_turn', 'Your Turn')
-                    : window.getTranslation('dots_opp_turn', "Opponent's Turn");
+                    ? window.getTranslation('dots_turn_your', 'Your Turn')
+                    : window.getTranslation('dots_turn_opponent', "Opponent's Turn");
             }
 
             if (stateChanged && typeof window.dots_drawBoard === 'function') {

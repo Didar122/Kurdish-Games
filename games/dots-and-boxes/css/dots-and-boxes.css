@@ -56,6 +56,20 @@
     -webkit-overflow-scrolling: touch;
     transition: opacity 0.3s ease;
     z-index: 10;
+    scroll-padding-bottom: 10rem;
+}
+
+@media (max-width: 768px) {
+    #dots_and_boxes .dots-game-screen {
+        padding-bottom: calc(13rem + env(safe-area-inset-bottom, 0));
+    }
+    #dots_and_boxes .game-container {
+        margin-bottom: 3rem;
+    }
+    #dots_and_boxes .board-container {
+        max-width: min(96vw, calc(100vh - 14rem), 720px);
+        max-height: calc(100vh - 14rem);
+    }
 }
 
 #dots_and_boxes .dots-game-screen.active {

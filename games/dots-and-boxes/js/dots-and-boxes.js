@@ -388,9 +388,10 @@
         const size = canvas.width / window.devicePixelRatio;
         const rows = dots_gameState.rows;
         const cols = dots_gameState.cols;
-        const usableWidth = size - 2 * PADDING;
+        const padding = dots_gameState.boardSize === 'large' ? 24 : PADDING;
+        const usableWidth = size - 2 * padding;
         const spacing = usableWidth / (cols - 1);
-        return { padding: PADDING, spacing: spacing, size: size };
+        return { padding: padding, spacing: spacing, size: size };
     }
 
     function getBoxLetter(owner) {
@@ -889,9 +890,12 @@
         let dragOriginX = 0;
         let dragOriginY = 0;
         let isCameraPanning = false;
+        let hasInteractionMoved = false;
         const activePointers = new Map();
         let initialPinchDistance = null;
         let initialPinchScale = 1.0;
+        let initialPinchOffsetX = 0;
+        let initialPinchOffsetY = 0;
 
         // Mouse & Touch Combined listeners
         canvas.addEventListener('pointerdown', (e) => {
@@ -906,6 +910,9 @@
                 const dy = points[0].y - points[1].y;
                 initialPinchDistance = Math.hypot(dx, dy);
                 initialPinchScale = dots_gameState.zoom.scale;
+                initialPinchOffsetX = dots_gameState.zoom.offsetX;
+                initialPinchOffsetY = dots_gameState.zoom.offsetY;
+                hasInteractionMoved = false;
             }
 
             // Pan start capture (only in large mode or if zoomed in)
@@ -928,17 +935,18 @@
                 const dy = points[0].y - points[1].y;
                 const distance = Math.hypot(dx, dy);
                 if (initialPinchDistance) {
-                    const scaleRatio = distance / initialPinchDistance;
-                    dots_gameState.zoom.scale = Math.min(Math.max(initialPinchScale * scaleRatio, 1.0), 3.8);
+                    hasInteractionMoved = true;
+                    const newScale = Math.min(Math.max(initialPinchScale * (distance / initialPinchDistance), 1.0), 3.8);
+                    const scaleFactor = newScale / initialPinchScale;
+                    dots_gameState.zoom.scale = newScale;
 
                     const bounds = canvas.getBoundingClientRect();
                     const mx = (points[0].x + points[1].x) / 2 - bounds.left;
                     const my = (points[0].y + points[1].y) / 2 - bounds.top;
-                    const oldScale = initialPinchScale;
-                    const newScale = dots_gameState.zoom.scale;
-                    const scaleFactor = newScale / oldScale;
-                    dots_gameState.zoom.offsetX = mx - (mx - dots_gameState.zoom.offsetX) * scaleFactor;
-                    dots_gameState.zoom.offsetY = my - (my - dots_gameState.zoom.offsetY) * scaleFactor;
+                            dots_gameState.zoom.offsetX = mx - (mx - initialPinchOffsetX) * scaleFactor;
+                    dots_gameState.zoom.offsetY = my - (my - initialPinchOffsetY) * scaleFactor;
+                    if (Math.abs(dots_gameState.zoom.offsetX) < 0.5) dots_gameState.zoom.offsetX = 0;
+                    if (Math.abs(dots_gameState.zoom.offsetY) < 0.5) dots_gameState.zoom.offsetY = 0;
 
                     const size = canvas.width / window.devicePixelRatio;
                     const maxOffset = size * (dots_gameState.zoom.scale - 1);
@@ -958,7 +966,8 @@
             // Determine if panning threshold met
             if (dots_gameState.zoom.isDragging && activePointers.size === 1) {
                 const dist = Math.hypot(e.clientX - dragOriginX, e.clientY - dragOriginY);
-                if (dist > 5) {
+                if (dist > 6) {
+                    hasInteractionMoved = true;
                     isCameraPanning = true;
                     const size = canvas.width / window.devicePixelRatio;
                     const maxOffset = size * (dots_gameState.zoom.scale - 1);
@@ -977,10 +986,14 @@
 
             if (isCameraPanning) {
                 isCameraPanning = false;
+                hasInteractionMoved = true;
                 return;
             }
 
-            if (activePointers.size > 0) return;
+            if (activePointers.size > 0 || hasInteractionMoved) {
+                hasInteractionMoved = false;
+                return;
+            }
 
             // FIX #2/#8: Debounce: ignore clicks that come within MOVE_COOLDOWN_MS of the last move.
             // This prevents a second line being placed when the user clicks quickly
