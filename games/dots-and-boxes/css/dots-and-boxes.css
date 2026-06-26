@@ -8,9 +8,9 @@
     position: relative;
     min-height: 100vh;
     width: 100%;
-    overflow: visible;
+    overflow: hidden;
     background: transparent;
-    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0));
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0));
 }
 
 /* =====================================================
@@ -45,33 +45,26 @@
    ===================================================== */
 
 #dots_and_boxes .dots-game-screen {
-    position: relative;
-    display: none;
+    position: absolute;
+    inset: 0;
+    display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 1rem 0 calc(18rem + env(safe-area-inset-bottom, 0)) 0;
+    padding: 1rem 0 calc(10rem + env(safe-area-inset-bottom, 0)) 0;
     opacity: 0;
     pointer-events: none;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     transition: opacity 0.3s ease;
-    z-index: 1;
-    scroll-padding-bottom: calc(20rem + env(safe-area-inset-bottom, 0));
+    z-index: 10;
+    scroll-padding-bottom: calc(12rem + env(safe-area-inset-bottom, 0));
     min-height: 100vh;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-#dots_and_boxes .dots-game-screen.active {
-    display: flex;
-    opacity: 1;
-    pointer-events: auto;
 }
 
 #dots_and_boxes .game-container,
 #dots_and_boxes .mode-container,
 #dots_and_boxes .type-container {
-    padding-bottom: calc(12rem + env(safe-area-inset-bottom, 0));
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0));
 }
 
 #dots_and_boxes .bottom-action-container {
@@ -80,29 +73,30 @@
 
 @media (max-width: 768px) {
     #dots_and_boxes .dots-game-screen {
-        padding-bottom: calc(26rem + env(safe-area-inset-bottom, 0));
+        padding-bottom: calc(22rem + env(safe-area-inset-bottom, 0));
     }
     #dots_and_boxes .game-container,
     #dots_and_boxes .mode-container,
     #dots_and_boxes .type-container {
         margin-bottom: 3rem;
-        padding-bottom: calc(18rem + env(safe-area-inset-bottom, 0));
+        padding-bottom: calc(10rem + env(safe-area-inset-bottom, 0));
     }
     #dots_and_boxes .board-container {
-        max-width: min(96vw, calc(100vh - 26rem), 720px);
-        max-height: calc(100vh - 26rem);
+        max-width: min(96vw, calc(100vh - 22rem), 720px);
+        max-height: calc(100vh - 22rem);
     }
+}
+
+#dots_and_boxes .dots-game-screen.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* Post-game result splash screens overlay the game board: higher z-index + centered */
 #dots_winnerSplashScreen,
 #dots_opponentLeftSplashScreen {
-    position: absolute;
-    inset: 0;
-    display: flex;
     z-index: 50;
     align-items: center;
-    justify-content: center;
     padding: 1rem;
 }
 
@@ -290,7 +284,6 @@
     display: flex;
     justify-content: center;
     margin-top: 1rem;
-    padding-bottom: 1rem;
 }
 
 #dots_and_boxes .back-button,
@@ -418,7 +411,6 @@
     justify-content: center;
     gap: 1rem;
     margin-top: 1rem;
-    margin-bottom: calc(6rem + env(safe-area-inset-bottom, 0));
     width: 100%;
 }
 
