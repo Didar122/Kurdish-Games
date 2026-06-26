@@ -49,18 +49,21 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 1rem 0 10rem 0;
+    padding: 1rem 0 6rem 0;
     opacity: 0;
     pointer-events: none;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     transition: opacity 0.3s ease;
     z-index: 10;
-    scroll-padding-bottom: 16rem;
+    scroll-padding-bottom: calc(12rem + env(safe-area-inset-bottom, 0));
+    min-height: 100vh;
 }
 
-#dots_and_boxes .game-container {
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0));
+#dots_and_boxes .game-container,
+#dots_and_boxes .mode-container,
+#dots_and_boxes .type-container {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0));
 }
 
 #dots_and_boxes .bottom-action-container {
@@ -69,15 +72,15 @@
 
 @media (max-width: 768px) {
     #dots_and_boxes .dots-game-screen {
-        padding-bottom: calc(18rem + env(safe-area-inset-bottom, 0));
+        padding-bottom: calc(20rem + env(safe-area-inset-bottom, 0));
     }
     #dots_and_boxes .game-container {
         margin-bottom: 3rem;
-        padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0));
+        padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0));
     }
     #dots_and_boxes .board-container {
-        max-width: min(96vw, calc(100vh - 18rem), 720px);
-        max-height: calc(100vh - 18rem);
+        max-width: min(96vw, calc(100vh - 20rem), 720px);
+        max-height: calc(100vh - 20rem);
     }
 }
 
