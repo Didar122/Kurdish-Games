@@ -247,8 +247,8 @@
     function setupBoard(size) {
         dots_gameState.boardSize = size;
         if (size === 'large') {
-            dots_gameState.rows = 20;
-            dots_gameState.cols = 20;
+            dots_gameState.rows = 12;
+            dots_gameState.cols = 12;
             const hint = document.getElementById('dots_cameraHint');
             if (hint) {
                 hint.style.display = 'block';
@@ -896,6 +896,7 @@
         let dragOriginY = 0;
         let isCameraPanning = false;
         let hasInteractionMoved = false;
+        let lastGestureAt = 0;
         const activePointers = new Map();
         let initialPinchDistance = null;
         let initialPinchScale = 1.0;
@@ -942,6 +943,7 @@
                 const distance = Math.hypot(dx, dy);
                 if (initialPinchDistance) {
                     hasInteractionMoved = true;
+                    lastGestureAt = Date.now();
                     const newScale = Math.min(Math.max(initialPinchScale * (distance / initialPinchDistance), 1.0), 3.8);
                     const scaleFactor = newScale / initialPinchScale;
                     dots_gameState.zoom.scale = newScale;
@@ -975,6 +977,7 @@
                 const moveThreshold = e.pointerType === 'touch' ? 14 : 6;
                 if (dist > moveThreshold) {
                     hasInteractionMoved = true;
+                    lastGestureAt = Date.now();
                     isCameraPanning = true;
                     const size = canvas.width / window.devicePixelRatio;
                     const maxOffset = size * (dots_gameState.zoom.scale - 1);
@@ -1000,6 +1003,10 @@
 
             if (activePointers.size > 0 || hasInteractionMoved) {
                 hasInteractionMoved = false;
+                return;
+            }
+
+            if (Date.now() - lastGestureAt < 300) {
                 return;
             }
 
@@ -1052,6 +1059,7 @@
             e.preventDefault();
 
             const zoomFactor = 1.1;
+            lastGestureAt = Date.now();
             const mouseCoords = screenToGridCoords(e.clientX, e.clientY);
 
             const oldScale = dots_gameState.zoom.scale;
