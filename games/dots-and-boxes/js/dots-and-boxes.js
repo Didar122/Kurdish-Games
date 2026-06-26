@@ -249,11 +249,16 @@
         if (size === 'large') {
             dots_gameState.rows = 20;
             dots_gameState.cols = 20;
-            document.getElementById('dots_cameraHint').style.display = 'block';
+            const hint = document.getElementById('dots_cameraHint');
+            if (hint) {
+                hint.style.display = 'block';
+                hint.textContent = window.getTranslation('dots_camera_hint', 'Use scroll/pinch to Zoom, drag canvas to Pan. Double tap/click to reset.');
+            }
         } else {
             dots_gameState.rows = 6;
             dots_gameState.cols = 6;
-            document.getElementById('dots_cameraHint').style.display = 'none';
+            const hint = document.getElementById('dots_cameraHint');
+            if (hint) hint.style.display = 'none';
         }
 
         const r = dots_gameState.rows;
@@ -295,9 +300,9 @@
         const size = Math.min(container.clientWidth, container.clientHeight || 480);
         canvas.width = size * window.devicePixelRatio;
         canvas.height = size * window.devicePixelRatio;
-        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
         canvas.style.width = size + 'px';
         canvas.style.height = size + 'px';
+        ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
 
         drawBoard();
     }
@@ -350,7 +355,13 @@
 
         // Meta labels (localize)
         document.getElementById('dots_gameTypeLabel').textContent = dots_gameState.boardSize === 'normal' ? window.getTranslation('dots_type_label_normal', 'Normal (6x6)') : window.getTranslation('dots_type_label_large', 'Large (20x20)');
-        document.getElementById('dots_difficultyLabel').textContent = dots_gameState.gameMode === 'single-player' ? window.getTranslation(`dots_diff_${dots_gameState.aiDifficulty}`, dots_gameState.aiDifficulty.toUpperCase()) : window.getTranslation('dots_mode_local', 'LOCAL');
+        if (dots_gameState.gameMode === 'single-player') {
+            document.getElementById('dots_difficultyLabel').textContent = window.getTranslation(`dots_diff_${dots_gameState.aiDifficulty}`, dots_gameState.aiDifficulty.toUpperCase());
+        } else if (dots_gameState.gameMode === 'two-player') {
+            document.getElementById('dots_difficultyLabel').textContent = window.getTranslation('dots_mode_local', 'LOCAL');
+        } else {
+            document.getElementById('dots_difficultyLabel').textContent = window.getTranslation('dots_mode_online', 'MULTIPLAYER');
+        }
     }
 
     // =====================================================
@@ -878,14 +889,27 @@
         let dragOriginX = 0;
         let dragOriginY = 0;
         let isCameraPanning = false;
+        const activePointers = new Map();
+        let initialPinchDistance = null;
+        let initialPinchScale = 1.0;
 
         // Mouse & Touch Combined listeners
         canvas.addEventListener('pointerdown', (e) => {
             isPointerDown = true;
             isCameraPanning = false;
+            activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+            canvas.setPointerCapture(e.pointerId);
+
+            if (activePointers.size === 2) {
+                const points = Array.from(activePointers.values());
+                const dx = points[0].x - points[1].x;
+                const dy = points[0].y - points[1].y;
+                initialPinchDistance = Math.hypot(dx, dy);
+                initialPinchScale = dots_gameState.zoom.scale;
+            }
 
             // Pan start capture (only in large mode or if zoomed in)
-            if (dots_gameState.boardSize === 'large' || dots_gameState.zoom.scale > 1.0) {
+            if ((dots_gameState.boardSize === 'large' || dots_gameState.zoom.scale > 1.0) && activePointers.size === 1) {
                 dots_gameState.zoom.isDragging = true;
                 dots_gameState.zoom.startX = e.clientX - dots_gameState.zoom.offsetX;
                 dots_gameState.zoom.startY = e.clientY - dots_gameState.zoom.offsetY;
@@ -895,14 +919,44 @@
         });
 
         canvas.addEventListener('pointermove', (e) => {
+            if (!activePointers.has(e.pointerId)) return;
+            activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+            if (activePointers.size === 2 && dots_gameState.boardSize === 'large') {
+                const points = Array.from(activePointers.values());
+                const dx = points[0].x - points[1].x;
+                const dy = points[0].y - points[1].y;
+                const distance = Math.hypot(dx, dy);
+                if (initialPinchDistance) {
+                    const scaleRatio = distance / initialPinchDistance;
+                    dots_gameState.zoom.scale = Math.min(Math.max(initialPinchScale * scaleRatio, 1.0), 3.8);
+
+                    const bounds = canvas.getBoundingClientRect();
+                    const mx = (points[0].x + points[1].x) / 2 - bounds.left;
+                    const my = (points[0].y + points[1].y) / 2 - bounds.top;
+                    const oldScale = initialPinchScale;
+                    const newScale = dots_gameState.zoom.scale;
+                    const scaleFactor = newScale / oldScale;
+                    dots_gameState.zoom.offsetX = mx - (mx - dots_gameState.zoom.offsetX) * scaleFactor;
+                    dots_gameState.zoom.offsetY = my - (my - dots_gameState.zoom.offsetY) * scaleFactor;
+
+                    const size = canvas.width / window.devicePixelRatio;
+                    const maxOffset = size * (dots_gameState.zoom.scale - 1);
+                    dots_gameState.zoom.offsetX = Math.max(-maxOffset, Math.min(0, dots_gameState.zoom.offsetX));
+                    dots_gameState.zoom.offsetY = Math.max(-maxOffset, Math.min(0, dots_gameState.zoom.offsetY));
+                    drawBoard();
+                    e.preventDefault();
+                    return;
+                }
+            }
+
             if (!isPointerDown) {
-                // Not dragging, just hover indicator updates
                 updateHoverState(e.clientX, e.clientY);
                 return;
             }
 
             // Determine if panning threshold met
-            if (dots_gameState.zoom.isDragging) {
+            if (dots_gameState.zoom.isDragging && activePointers.size === 1) {
                 const dist = Math.hypot(e.clientX - dragOriginX, e.clientY - dragOriginY);
                 if (dist > 5) {
                     isCameraPanning = true;
@@ -916,13 +970,17 @@
         });
 
         canvas.addEventListener('pointerup', (e) => {
-            isPointerDown = false;
+            activePointers.delete(e.pointerId);
+            isPointerDown = activePointers.size > 0;
             dots_gameState.zoom.isDragging = false;
+            initialPinchDistance = null;
 
             if (isCameraPanning) {
                 isCameraPanning = false;
                 return;
             }
+
+            if (activePointers.size > 0) return;
 
             // FIX #2/#8: Debounce: ignore clicks that come within MOVE_COOLDOWN_MS of the last move.
             // This prevents a second line being placed when the user clicks quickly
@@ -937,10 +995,34 @@
         });
 
         canvas.addEventListener('pointerleave', () => {
+            activePointers.clear();
             isPointerDown = false;
             dots_gameState.zoom.isDragging = false;
+            initialPinchDistance = null;
             hoveredLine = null;
             drawBoard();
+        });
+
+        canvas.addEventListener('pointercancel', (e) => {
+            activePointers.delete(e.pointerId);
+            if (activePointers.size === 0) {
+                isPointerDown = false;
+                dots_gameState.zoom.isDragging = false;
+                initialPinchDistance = null;
+                hoveredLine = null;
+                drawBoard();
+            }
+        });
+
+        canvas.addEventListener('lostpointercapture', (e) => {
+            activePointers.delete(e.pointerId);
+            if (activePointers.size === 0) {
+                isPointerDown = false;
+                dots_gameState.zoom.isDragging = false;
+                initialPinchDistance = null;
+                hoveredLine = null;
+                drawBoard();
+            }
         });
 
         // Zoom wheel listener

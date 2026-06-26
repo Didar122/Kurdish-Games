@@ -553,6 +553,8 @@ window.translations = {
         "dots_type_label_normal": "سایزی ئاسایی (6x6)",
         "dots_type_label_large": "سایزی گەورە (20x20)",
         "dots_mode_local": "ناوخۆیی",
+        "dots_mode_online": "یاری سەر هێڵ",
+        "dots_camera_hint": "بەکاربهێنە پینچ/سکرۆڵ بۆ زوم، داگیڕاندن بۆ پان، دووجار کرتە بکە بۆ ڕیست.",
         "dots_status_winner": "براوە",
         "dots_status_loser": "دۆڕاو",
         "profile_name": "تۆ"
@@ -569,6 +571,8 @@ window.translations = {
         "dots_type_label_normal": "Normal (6x6)",
         "dots_type_label_large": "Large (20x20)",
         "dots_mode_local": "LOCAL",
+        "dots_mode_online": "MULTIPLAYER",
+        "dots_camera_hint": "Use scroll/pinch to Zoom, drag canvas to Pan. Double tap/click to reset.",
         "dots_status_winner": "Winner",
         "dots_status_loser": "Loser",
         "profile_name": "You"

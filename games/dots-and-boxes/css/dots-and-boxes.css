@@ -49,7 +49,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 1rem 0 5.5rem 0;
+    padding: 1rem 0 8rem 0;
     opacity: 0;
     pointer-events: none;
     overflow-y: auto;
@@ -359,7 +359,8 @@
 
 #dots_and_boxes .board-container {
     width: 100%;
-    max-width: 480px;
+    max-width: min(92vw, 720px);
+    max-height: min(85vh, 720px);
     aspect-ratio: 1;
     background: #0f172a;
     border: 3px solid rgba(255, 255, 255, 0.1);
@@ -371,6 +372,8 @@
     width: 100%;
     height: 100%;
     cursor: crosshair;
+    touch-action: none;
+    -ms-touch-action: none;
 }
 
 /* FIX #4: Equal-sized bottom action buttons */

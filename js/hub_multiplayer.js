@@ -130,20 +130,22 @@ async function joinRoomHub(roomId) {
         const input = document.getElementById('dots_joinRoomId');
         if (input) input.value = roomId;
 
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise(resolve => setTimeout(resolve, 150));
 
         if (typeof window.dotsMultiplayer !== 'undefined' && typeof window.dotsMultiplayer.joinRoom === 'function') {
+            if (typeof showDotsScreen === 'function') {
+                showDotsScreen('dots_waitingScreen');
+            }
             const joined = await window.dotsMultiplayer.joinRoom(roomId);
             if (joined) {
                 const colorSpan = document.getElementById('dots_playerColorSpan');
                 if (colorSpan) {
                     colorSpan.textContent = window.getTranslation(window.dotsMultiplayer.playerColor.toLowerCase() === 'white' ? 'dama_color_white' : 'dama_color_black', window.dotsMultiplayer.playerColor);
                 }
-                setTimeout(() => {
-                    if (!window.dotsMultiplayer.gameStarted && typeof showDotsScreen === 'function') {
-                        showDotsScreen('dots_waitingScreen');
-                    }
-                }, 150);
+            } else {
+                if (typeof showDotsScreen === 'function') {
+                    showDotsScreen('dots_multiplayerModeScreen');
+                }
             }
         }
     } else {

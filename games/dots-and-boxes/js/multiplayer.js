@@ -792,10 +792,12 @@
             });
 
             listenToRoom(roomId);
+            return true;
 
         } catch (e) {
             console.error('Error joining dots room:', e);
             alert(window.getTranslation('mp_failed_join', 'Failed to join room. Please try again.'));
+            return false;
         }
     }
     multiplayer.joinRoom = joinRoom;
