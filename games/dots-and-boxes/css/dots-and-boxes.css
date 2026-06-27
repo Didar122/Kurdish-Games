@@ -10,7 +10,6 @@
     width: 100%;
     overflow: hidden;
     background: transparent;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0));
 }
 
 /* =====================================================
@@ -47,24 +46,32 @@
 #dots_and_boxes .dots-game-screen {
     position: absolute;
     inset: 0;
-    display: flex;
+    display: none;
     align-items: flex-start;
     justify-content: center;
-    padding: 1rem 0 calc(10rem + env(safe-area-inset-bottom, 0)) 0;
-    opacity: 0;
-    pointer-events: none;
+    padding-top: calc(env(safe-area-inset-top, 18px) + 36px); /* Increased padding to safely clear the iPhone bar */
+    padding-bottom: calc(env(safe-area-inset-bottom, 50px) + 100px); /* Leave room for bottom navigation */
+    min-height: 100dvh;
+    box-sizing: border-box;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    transition: opacity 0.3s ease;
     z-index: 10;
-    scroll-padding-bottom: calc(12rem + env(safe-area-inset-bottom, 0));
-    min-height: 100vh;
+}
+
+/* Add this block right below it to make active screens show up */
+#dots_and_boxes .dots-game-screen.active {
+    display: flex;
 }
 
 #dots_and_boxes .game-container,
 #dots_and_boxes .mode-container,
 #dots_and_boxes .type-container {
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0));
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto !important;
+    padding: 2rem 1.5rem 7rem !important;
+    width: 100% !important;
 }
 
 #dots_and_boxes .bottom-action-container {
@@ -73,13 +80,13 @@
 
 @media (max-width: 768px) {
     #dots_and_boxes .dots-game-screen {
-        padding-bottom: calc(22rem + env(safe-area-inset-bottom, 0));
+        padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
     }
     #dots_and_boxes .game-container,
     #dots_and_boxes .mode-container,
     #dots_and_boxes .type-container {
-        margin-bottom: 3rem;
-        padding-bottom: calc(10rem + env(safe-area-inset-bottom, 0));
+        margin-bottom: 0dvb;=
+        padding-bottom: 7.5rem;
     }
     #dots_and_boxes .board-container {
         max-width: min(96vw, calc(100vh - 22rem), 720px);
@@ -88,6 +95,7 @@
 }
 
 #dots_and_boxes .dots-game-screen.active {
+    display: flex;
     opacity: 1;
     pointer-events: auto;
 }
@@ -605,11 +613,11 @@
 }
 
 #dots_and_boxes .splash-content {
-    background: rgba(30, 41, 59, 0.65) !important;
+    background: rgba(30, 41, 59, 0.349) !important;
     backdrop-filter: blur(16px) !important;
     -webkit-backdrop-filter: blur(16px) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.4), 0 10px 10px -5px rgba(0,0,0,0.4) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.233), 0 10px 10px -5px rgba(0,0,0,0.4) !important;
     padding: 30px !important;
     border-radius: 20px !important;
     max-width: 600px;

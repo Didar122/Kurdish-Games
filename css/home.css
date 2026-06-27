@@ -12,12 +12,26 @@
 html, body {
     touch-action: manipulation;
     -webkit-text-size-adjust: 100%;
+    margin: 0;
+    padding: 0;
+    min-height: 100dvh;
+    /* Ensure the body itself is black/dark so it doesn't default to a light grey */
+    background-color: #0b0f19; 
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .section {
     display: none;
     position: relative;
-    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    padding-top: calc(env(safe-area-inset-top, 15px) + 20px); /* Increased padding to safely clear the iPhone bar */
+    padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 30px); /* Leave room for bottom navigation */
+    box-sizing: border-box;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
 }
 
 .section:not(.hidden) {
@@ -33,7 +47,14 @@ html, body {
 }
 
 /* Games info grid */
-.games-info-grid { display:flex; gap:18px; justify-content:center; align-items:flex-start; }
+.games-info-grid { 
+    display: flex; 
+    gap: 18px; 
+    justify-content: center; 
+    align-items: flex-start; 
+    /* Force this top component grid down below the notch area */
+    padding-top: env(safe-area-inset-top, 20px); 
+}
 .games-info-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 12px; width: 170px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; transition: transform 0.18s ease, box-shadow 0.18s ease; }
 .games-info-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.45); }
 .games-info-thumb { width: 140px; height: 140px; object-fit: contain; border-radius:8px; }
@@ -122,7 +143,7 @@ html, body {
     align-items: center;
     width: 100%;
     min-height: 100vh;
-    padding: 1rem 1rem 6rem 1rem;
+    padding: 1rem 1rem 3rem 1rem;
     position: relative;
     z-index: 1;
 }
@@ -362,7 +383,7 @@ html, body {
         justify-items: center;
         max-width: 1200px;
         margin: 0 auto;
-        padding: 1.5rem 2rem 6rem 2rem;
+        padding: 1.5rem 2rem 3rem 2rem;
         min-height: calc(100vh - 3rem);
     }
 
@@ -802,16 +823,17 @@ input:checked + .slider-switch:before {
    NOTIFICATIONS BELL BUTTON & MODAL
    ===================================================== */
 
+/* 1. Default (Desktop/Large Screens) */
 .notification-btn {
     position: absolute;
-    top: 25px;
-    right: 25px;
+    top: 40px;
+    right: 30px;
     width: 50px;
     height: 50px;
-    border-radius: 50%;
+    border-radius: 99%;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ffd700; /* gold */
+    color: #ffd700;
     font-size: 1.45rem;
     display: flex;
     align-items: center;
@@ -822,6 +844,15 @@ input:checked + .slider-switch:before {
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* 2. Mobile Specific Override */
+@media (max-width: 768px) {
+    .notification-btn {
+        /* This pushes it down exactly far enough to clear the battery notch */
+        top: calc(env(safe-area-inset-top, 40px) + 30px) !important;
+        right: 20px; /* Slightly tighter spacing for small screens */
+    }
 }
 
 .notification-btn:hover {
@@ -847,7 +878,7 @@ input:checked + .slider-switch:before {
     height: 12px;
     background-color: #ef4444; /* red dot */
     border-radius: 50%;
-    border: 2px solid #1f5050; /* boundary contrast using theme color */
+    border: 2px solid #ff000077; /* boundary contrast using theme color */
 }
 
 .install-btn {
@@ -915,7 +946,7 @@ input:checked + .slider-switch:before {
 
 .notification-item {
     display: flex;
-    gap: 12px;
+    gap: 20px;
     padding: 15px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);

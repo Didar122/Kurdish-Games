@@ -2,9 +2,10 @@
 
 .profile-section {
     position: relative;
-    min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
-    padding: 1rem 1rem 6rem;
+    /* Increased top padding by adding 35px to clear the battery/time elements completely */
+    padding: calc(env(safe-area-inset-top, 20px) + 40px) 1rem 7rem 1rem !important;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -26,7 +27,7 @@
     display: flex !important;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    gap: 10rem !important;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     z-index: 10;
